@@ -1,0 +1,109 @@
+@import './partials/head';
+@import './partials/variables';
+@import './partials/snipping';
+@import './partials/page';
+.feedbackContainer {
+    position: absolute;
+
+    .feedback {
+        width: 300px;
+        height: 400px;
+        background: #ddd;
+        z-index: 999999999;
+        border-radius: 3px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px;
+    }
+}
+.selected {
+    .deleteBtn {
+        width: 20px;
+        height: 20px;
+        background: #aaa;
+        font-size: 1.2vw;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        border: 1px solid;
+    }
+    &:hover {
+        .deleteBtn {
+            display: flex;
+            border: 1px solid;
+        }
+    }
+}
+#screenshot {
+    height: 100%;
+    width: 100%;
+}
+.rectangle {
+    border: 3px solid yellow;
+    border-radius: 4px;
+    position: absolute;
+    pointer-events: none;
+    button {
+        pointer-events: auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        color: $white;
+        &:hover {
+            background: $containerColor;
+            color: $black;
+        }
+    }
+    &:hover {
+        border: 3px solid red;
+    }
+}
+
+.censored {
+    border-radius: 4px;
+    position: absolute;
+    background-color: #000;
+    pointer-events: none;
+    button {
+        pointer-events: auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        color: $white;
+        &:hover {
+            background: $containerColor;
+            color: $black;
+        }
+    }
+    &:hover {
+        border: 3px solid red;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+}
+
+.snipping__captureScreenshot {
+    padding: 5px;
+    border: 0;
+    border-radius: 4px;
+    margin: 0 4px 0 0;
+    cursor: pointer;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 999;
+}
+.__snipping_button_active {
+    background-color: $activeBtn;
+    color: $white;
+}
