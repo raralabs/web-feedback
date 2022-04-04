@@ -21,30 +21,19 @@ const getDimensionOfElement = (elName: string) => {
     return document.getElementsByClassName(elName)[0].getBoundingClientRect();
 };
 
-/**
- *
- * clear markers (rectangle and censored)
- */
-const clearMarkers = (markerName: string) => {
-    const markers = document.getElementsByClassName(markerName);
-    while (markers[0]) {
-        markers[0].parentNode.removeChild(markers[0]);
-    }
-};
-
 const style = (element: HTMLElement, style: any) => {
-    for (const property in style) element.style[property] = style[property];
+    for (const property in style) element.style[(property as any)] = style[property];
 };
 
-const _createElement = (initObj) => {
+const _createElement = (initObj:any) => {
     var element = document.createElement(initObj.Tag);
     for (var prop in initObj) {
         if (prop === 'childNodes') {
-            initObj.childNodes.forEach(function (node) {
+            initObj.childNodes.forEach(function (node:Node) {
                 element.appendChild(node);
             });
         } else if (prop === 'attributes') {
-            initObj.attributes.forEach(function (attr) {
+            initObj.attributes.forEach(function (attr:any) {
                 element.setAttribute(attr.key, attr.value);
             });
         } else element[prop] = initObj[prop];
@@ -53,4 +42,4 @@ const _createElement = (initObj) => {
     return element;
 };
 
-export { createElement, isDocumentReady, getDimensionOfElement, getElement, clearMarkers, style, _createElement };
+export { createElement, isDocumentReady, getDimensionOfElement, getElement, style, _createElement };

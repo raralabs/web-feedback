@@ -17,7 +17,6 @@ class Snipping {
         this.snippingHeaderHTML = `
         <div>
         <button class="__screenshotBtn">Retake Screenchot</button>
-        <button class="__doneBtn">Done</button>
         </div>
         <div>
         <button class="__markBtn __snipping_button_active">Mark</button>
@@ -26,7 +25,7 @@ class Snipping {
     }
 
     _clearMarkers(markerName: string) {
-        const markers = document.getElementsByClassName(markerName);
+        const markers:any = document.getElementsByClassName(markerName);
         while (markers[0]) {
             markers[0].parentNode.removeChild(markers[0]);
         }
@@ -36,10 +35,10 @@ class Snipping {
         return (e.srcElement.parentElement.style.display = 'none');
     }
 
-    _initDraw(canvas) {
+    _initDraw(canvas:HTMLDivElement) {
         let that = this;
-        function setMousePosition(e) {
-            var ev = e || window.event; //Moz || IE
+        function setMousePosition(e:MouseEvent) {
+            var ev:any = e || window.event; //Moz || IE
             if (ev.pageX) {
                 //Moz
                 mouse.x = ev.layerX;
@@ -57,8 +56,8 @@ class Snipping {
             startX: 0,
             startY: 0
         };
-        var _marker = null;
-        var _delBtn = null;
+        var _marker:HTMLDivElement|null = null;
+        var _delBtn:HTMLButtonElement| null= null;
 
         canvas.onmousemove = function (e) {
             setMousePosition(e);
@@ -72,11 +71,11 @@ class Snipping {
             }
         };
 
-        canvas.onclick = function (e) {
+        canvas.onclick = function (e:MouseEvent) {
             if (_marker !== null) {
                 _marker = null;
                 canvas.style.cursor = 'default';
-            } else if (e.target.name === 'delMarker') {
+            } else if ((e?.target as HTMLInputElement)?.name === 'delMarker') {
                 _marker = null;
                 canvas.style.cursor = 'default';
             } else {
@@ -89,16 +88,16 @@ class Snipping {
                     name: 'delMarker',
                     classlist: ['__snipping_marker_delete']
                 });
-                _delBtn.addEventListener('click', that._delMarker);
+                (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
                 _marker = _createElement({
                     Tag: 'div'
                 });
-                _marker.classList.add(that.markMode === 'mark' ? 'rectangle' : 'censored');
+                (_marker as HTMLDivElement).classList.add(that.markMode === 'mark' ? 'rectangle' : 'censored');
 
-                _marker.appendChild(_delBtn);
-                _marker.style.left = mouse.x + 'px';
-                _marker.style.top = mouse.y + 'px';
-                canvas.appendChild(_marker);
+                (_marker as HTMLDivElement).appendChild((_delBtn as Node));
+                (_marker as HTMLDivElement).style.left = mouse.x + 'px';
+                (_marker as HTMLDivElement).style.top = mouse.y + 'px';
+                canvas.appendChild((_marker as Node));
                 canvas.style.cursor = 'crosshair';
             }
         };
@@ -143,7 +142,7 @@ class Snipping {
 
     _initEvents() {
         const retake__screenshotBtn = getElement('.__screenshotBtn')[0];
-        const doneBtn = getElement('.__doneBtn')[0];
+        const doneBtn = getElement('._feedbackSubmitBtn')[0];
         const __markBtn = getElement('.__markBtn')[0];
         const __cencorBtn = getElement('.__cencorBtn')[0];
         retake__screenshotBtn.addEventListener('click', () => {
@@ -153,7 +152,8 @@ class Snipping {
             getElement('.snipping__captureScreenshot')[0].style.display = 'block';
         });
 
-        doneBtn.addEventListener('click', () => {
+        doneBtn.addEventListener('click', (event:MouseEvent) => {
+            event.preventDefault();
             this._done();
         });
         __markBtn.addEventListener('click', () => {
@@ -221,7 +221,7 @@ class Snipping {
             💡 Note
             Give as much info as you want to help our devs fix the issue.</textarea>
             </label>
-            <button class="_feedbackSubmitBtn">Submit</button>
+            <button type="button" class="_feedbackSubmitBtn">Submit</button>
             </form>
             </div>`
         });
@@ -263,8 +263,6 @@ class Snipping {
             innerHTML: this.buttonLabel,
             classList: ['snipping__captureScreenshotBtn']
         });
-
-        ///
 
         _snapButton.addEventListener('click', () => {
             _snapButton.style.display = 'none';
