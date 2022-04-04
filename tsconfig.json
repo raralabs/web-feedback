@@ -8,11 +8,11 @@
         "types": ["node"],
         "module": "es2015",
         "moduleResolution": "node",
-        "noImplicitAny": false,
+        // "noImplicitAny": ,
         "noUnusedLocals": true,
         "outDir": "dist/esm",
         "sourceMap": true,
-        "strict": false,
+        "strict": true,
         "target": "es6"
     },
     "include": ["src/**/*.ts", "src/**/*.tsx"]
