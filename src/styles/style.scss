@@ -92,18 +92,25 @@
     }
 }
 
-.snipping__captureScreenshot {
-    padding: 5px;
-    border: 0;
-    border-radius: 4px;
-    margin: 0 4px 0 0;
-    cursor: pointer;
+.__snipping_button_active {
+    background-color: $activeBtn;
+    color: $white;
+}
+
+.snipping__captureScreenshotContainer {
     position: fixed;
     top: 50%;
     right: 0;
     z-index: 999;
-}
-.__snipping_button_active {
-    background-color: $activeBtn;
-    color: $white;
+    .snipping__captureScreenshotBtn {
+        padding: 7px;
+        border: 0;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        cursor: pointer;
+        transform: rotateZ(-90deg) translateX(50%) translateY(3px);
+        transform-origin: 100% 100%;
+        background-color: $primary;
+        color: $white;
+    }
 }

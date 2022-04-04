@@ -5,14 +5,14 @@ import html2canvas from 'html2canvas';
 import '../../styles/style.scss';
 import { ICanvas_Mode } from '../../types/IModes/ICanvas';
 
-class snipping {
+class Snipping {
     buttonLabel: string;
     markMode: ICanvas_Mode.IMarkMode;
     snippingHeaderHTML: string;
 
     constructor(config: ICanvas_Mode.IConfig) {
         const { buttonLabel, initialMarkMode } = config;
-        this.buttonLabel = buttonLabel || 'Capture Screenshot';
+        this.buttonLabel = buttonLabel || 'Send Feedback';
         this.markMode = initialMarkMode || 'mark';
         this.snippingHeaderHTML = `
         <div>
@@ -131,6 +131,7 @@ class snipping {
         let that = this;
         that._clearMarkers('__snipping_marker_delete');
         const snippingContent = document.getElementsByClassName('snippingContent')[0];
+
         html2canvas(snippingContent as HTMLElement, {
             useCORS: true
         }).then(function (canvas) {
@@ -186,7 +187,7 @@ class snipping {
 
         style(_snippingContainer, {
             width: '80%',
-            height: '80%'
+            height: '95%'
         });
 
         /** snipping header */
@@ -198,12 +199,33 @@ class snipping {
 
         /** snipping info area */
         const _snippingInfo = _createElement({
-            Tag: 'header',
-            classList: ['snippingInfo'],
+            Tag: 'div',
+            classList: ['_snippingInfo'],
             innerHTML: `<div>
-            <textarea class="__feedback_description" placeholder="Your Feedback here!"/></textarea>
+            <header>
+            <h1>Rara Feedback Portal</h1>
+            </header>
+            <form>
+            <label>
+             <p>Title</p>
+             <input class="_feedbackInfoInput" input type="text" placeholder="Describe your feedback"/>
+            </label>
+            <label>
+            <p>Description</p>
+            <textarea class="_feedbackInfoTextarea" textarea class="__feedback_description" placeholder="Your Feedback here!"/>What's your issue?
+
+            What did you expect?
+            
+            
+            ---
+            💡 Note
+            Give as much info as you want to help our devs fix the issue.</textarea>
+            </label>
+            <button class="_feedbackSubmitBtn">Submit</button>
+            </form>
             </div>`
         });
+        //..
 
         /** snipping content */
 
@@ -214,7 +236,7 @@ class snipping {
         });
         style(_snippingContent, {
             width: '100%',
-            height: '80%'
+            height: '95%'
         });
 
         const _snapedImg: any = _createElement({
@@ -224,25 +246,32 @@ class snipping {
 
         /** rendering elements */
         _snippingContainer.appendChild(_snippingHeader);
-        _snippingContainer.appendChild(_snippingInfo);
         _snippingContent.appendChild(_snapedImg);
         _snippingContainer.appendChild(_snippingContent);
         _container.appendChild(_snippingContainer);
+        _container.appendChild(_snippingInfo);
         document.body.appendChild(_container);
     }
 
     _prepareSnapper() {
+        let _snapButtonContainer = _createElement({
+            Tag: 'div',
+            classList: ['snipping__captureScreenshotContainer']
+        });
         let _snapButton = _createElement({
             Tag: 'button',
             innerHTML: this.buttonLabel,
-            classList: ['snipping__captureScreenshot ']
+            classList: ['snipping__captureScreenshotBtn']
         });
+
+        ///
 
         _snapButton.addEventListener('click', () => {
             _snapButton.style.display = 'none';
             this._takeScreenShot();
         });
-        document.body.appendChild(_snapButton);
+        _snapButtonContainer.appendChild(_snapButton);
+        document.body.appendChild(_snapButtonContainer);
     }
 
     init() {
@@ -254,4 +283,4 @@ class snipping {
     }
 }
 
-export { snipping };
+export { Snipping };

@@ -1,3 +1,3 @@
-import { snipping } from './modes/canvas';
+import { Snipping } from './modes/canvas';
 import { init } from './modes/page';
-export { init, snipping };
+export { init, Snipping };
