@@ -7,7 +7,7 @@
     background: $overlayColor;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     button {
         padding: 5px;
         border: 0;
@@ -40,6 +40,49 @@
             width: 100%;
             border: 0;
             padding: 10px;
+        }
+    }
+}
+._snippingInfo {
+    background: #f2f2f2;
+    border-radius: 7px;
+    margin: 6px;
+    height: 400px;
+    width: 300px;
+    box-shadow: 1px 2px 11px 7px rgba(0, 0, 0, 0.2);
+    header {
+        padding: 10px;
+        border-bottom: 2px solid $primary;
+        h1 {
+            font-size: 1.6vw;
+            text-align: center;
+            color: $primary;
+        }
+    }
+    form {
+        padding: 10px 20px 10px 20px;
+        p {
+            font-weight: 500;
+            color: #4a4a4aad;
+            font-size: 1.45vw;
+        }
+        ._feedbackInfoInput,
+        ._feedbackInfoTextarea {
+            padding: 6px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #aaaa;
+            margin: 0 0 10px 0;
+        }
+        ._feedbackInfoTextarea {
+            height: 140px;
+        }
+        ._feedbackSubmitBtn {
+            background-color: $primary;
+            width: 100%;
+            padding: 6px;
+            color: $white;
+            height: 40px;
         }
     }
 }

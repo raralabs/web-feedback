@@ -1,7 +1,7 @@
 /** stylesheet */
 import '../../styles/style.scss';
 import { ICanvas_Mode } from '../../types/IModes/ICanvas';
-declare class snipping {
+declare class Snipping {
     buttonLabel: string;
     markMode: ICanvas_Mode.IMarkMode;
     snippingHeaderHTML: string;
@@ -16,4 +16,4 @@ declare class snipping {
     _prepareSnapper(): void;
     init(): void;
 }
-export { snipping };
+export { Snipping };
