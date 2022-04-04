@@ -9,11 +9,6 @@ declare const getElement: (query: string) => any;
  *
  */
 declare const getDimensionOfElement: (elName: string) => DOMRect;
-/**
- *
- * clear markers (rectangle and censored)
- */
-declare const clearMarkers: (markerName: string) => void;
 declare const style: (element: HTMLElement, style: any) => void;
 declare const _createElement: (initObj: any) => any;
-export { createElement, isDocumentReady, getDimensionOfElement, getElement, clearMarkers, style, _createElement };
+export { createElement, isDocumentReady, getDimensionOfElement, getElement, style, _createElement };

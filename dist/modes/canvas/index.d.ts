@@ -8,7 +8,7 @@ declare class Snipping {
     constructor(config: ICanvas_Mode.IConfig);
     _clearMarkers(markerName: string): void;
     _delMarker(e: any): string;
-    _initDraw(canvas: any): void;
+    _initDraw(canvas: HTMLDivElement): void;
     _takeScreenShot: () => void;
     _done(): void;
     _initEvents(): void;
