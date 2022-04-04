@@ -149,7 +149,7 @@ class Snipping {
             this._clearMarkers('rectangle');
             this._clearMarkers('censored');
             getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-            getElement('.snipping__captureScreenshot')[0].style.display = 'block';
+            getElement('.snipping__captureScreenshotContainer')[0].style.display = 'block';
         });
 
         doneBtn.addEventListener('click', (event:MouseEvent) => {
@@ -265,7 +265,7 @@ class Snipping {
         });
 
         _snapButton.addEventListener('click', () => {
-            _snapButton.style.display = 'none';
+            _snapButtonContainer.style.display = 'none';
             this._takeScreenShot();
         });
         _snapButtonContainer.appendChild(_snapButton);
