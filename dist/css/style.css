@@ -173,7 +173,14 @@
 .__annotateTextTool {
   border-radius: 4px;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  border: 2px dashed;
+}
+.__annotateTextTool p {
+  color: red;
+  font-weight: 700;
+  text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+  outline: none;
 }
 .__annotateTextTool button {
   pointer-events: auto;
@@ -191,7 +198,7 @@
   color: #000;
 }
 .__annotateTextTool:hover {
-  border: 3px solid red;
+  border: 2px solid red;
 }
 
 .censored {

@@ -1,14 +1,14 @@
 declare type appId = string | number;
 export declare namespace ICanvasMode {
-  interface IConfig {
-    button?: boolean;
-    buttonLabel?: string;
-    initialMarkMode?: IMarkMode;
-    appId: appId;
-  }
-  type IMarkMode = 'mark' | 'censored' | 'text';
+    type IMarkMode = 'mark' | 'censored' | 'text';
+    interface IConfig {
+        button?: boolean;
+        buttonLabel?: string;
+        initialMarkMode?: IMarkMode;
+        appId: appId;
+    }
 }
 export interface feedbackData {
-  appId: appId;
+    appId: appId;
 }
 export {};

@@ -68,7 +68,7 @@ class Snipping {
         mouse.y = ev.layerY;
       }
     }
-
+    // ..
     const mouse = {
       x: 0,
       y: 0,
