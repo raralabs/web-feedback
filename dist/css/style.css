@@ -1,239 +1,239 @@
 .snippingFeedBackContainer {
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 .snippingFeedBackContainer .__annotateTools {
-  background-color: #fff;
-  border-radius: 5px;
-  display: flex;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
 }
 .snippingFeedBackContainer button {
-  padding: 5px;
-  border: 0;
-  margin: 0 4px 0 0;
-  cursor: pointer;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    padding: 5px;
+    border: 0;
+    margin: 0 4px 0 0;
+    cursor: pointer;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .snippingFeedBackContainer .__snipping_button_active {
-  background-color: #f24a72;
-  color: #fff;
+    background-color: #f24a72;
+    color: #fff;
 }
 .snippingFeedBackContainer .__snipping_button_active svg,
 .snippingFeedBackContainer .__snipping_button_active path {
-  fill: #fff;
+    fill: #fff;
 }
 .snippingFeedBackContainer .snippingContainer {
-  height: 85%;
-  width: 80%;
-  background: #f2f2f2;
-  border-radius: 7px;
-  padding: 10px;
+    height: 85%;
+    width: 80%;
+    background: #f2f2f2;
+    border-radius: 7px;
+    padding: 10px;
 }
 .snippingFeedBackContainer .snippingContainer .snippingHeader {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 .snippingFeedBackContainer .snippingContainer .snippingContent {
-  margin: 10px 0 0 0;
+    margin: 10px 0 0 0;
 }
 .snippingFeedBackContainer .snippingContainer #snippingCanvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 1px solid;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
 }
 .snippingFeedBackContainer .snippingContainer .__feedback_description {
-  margin: 20px 0 0 0;
-  width: 100%;
-  border: 0;
-  padding: 10px;
+    margin: 20px 0 0 0;
+    width: 100%;
+    border: 0;
+    padding: 10px;
 }
 
 ._snippingInfo {
-  background: #f2f2f2;
-  border-radius: 7px;
-  margin: 6px;
-  height: 400px;
-  width: 300px;
-  box-shadow: 1px 2px 11px 7px rgba(0, 0, 0, 0.2);
+    background: #f2f2f2;
+    border-radius: 7px;
+    margin: 6px;
+    height: 400px;
+    width: 300px;
+    box-shadow: 1px 2px 11px 7px rgba(0, 0, 0, 0.2);
 }
 ._snippingInfo header {
-  padding: 10px;
-  border-bottom: 2px solid #f24a72;
+    padding: 10px;
+    border-bottom: 2px solid #f24a72;
 }
 ._snippingInfo header h1 {
-  font-size: 1.6vw;
-  text-align: center;
-  color: #f24a72;
+    font-size: 1.6vw;
+    text-align: center;
+    color: #f24a72;
 }
 ._snippingInfo form {
-  padding: 10px 20px 10px 20px;
+    padding: 10px 20px 10px 20px;
 }
 ._snippingInfo form p {
-  font-weight: 500;
-  color: #4a4a4aad;
-  font-size: 1.45vw;
+    font-weight: 500;
+    color: #4a4a4aad;
+    font-size: 1.45vw;
 }
 ._snippingInfo form ._feedbackInfoInput,
 ._snippingInfo form ._feedbackInfoTextarea {
-  padding: 10px;
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid #aaaa;
-  margin: 0 0 10px 0;
-  outline: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #aaaa;
+    margin: 0 0 10px 0;
+    outline: none;
 }
 ._snippingInfo form ._feedbackInfoTextarea {
-  height: 140px;
+    height: 140px;
 }
 ._snippingInfo form ._feedbackSubmitBtn {
-  background-color: #f24a72;
-  width: 100%;
-  padding: 6px;
-  color: #fff;
-  height: 40px;
+    background-color: #f24a72;
+    width: 100%;
+    padding: 6px;
+    color: #fff;
+    height: 40px;
 }
 
 .selected_rect {
-  box-shadow: inset 0px 0px 1px 2px yellow;
+    box-shadow: inset 0px 0px 1px 2px yellow;
 }
 
 .feedbackContainer {
-  position: absolute;
+    position: absolute;
 }
 .feedbackContainer .feedback {
-  width: 300px;
-  height: 400px;
-  background: #ddd;
-  z-index: 999999999;
-  border-radius: 3px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 15px;
+    width: 300px;
+    height: 400px;
+    background: #ddd;
+    z-index: 999999999;
+    border-radius: 3px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px;
 }
 
 .selected .deleteBtn {
-  width: 20px;
-  height: 20px;
-  background: #aaa;
-  font-size: 1.2vw;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100%;
-  border: 1px solid;
+    width: 20px;
+    height: 20px;
+    background: #aaa;
+    font-size: 1.2vw;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    border: 1px solid;
 }
 .selected:hover .deleteBtn {
-  display: flex;
-  border: 1px solid;
+    display: flex;
+    border: 1px solid;
 }
 
 #screenshot {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .rectangle {
-  border: 3px solid yellow;
-  border-radius: 4px;
-  position: absolute;
-  pointer-events: none;
+    border: 3px solid yellow;
+    border-radius: 4px;
+    position: absolute;
+    pointer-events: none;
 }
 .rectangle button {
-  pointer-events: auto;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
 }
 .rectangle button:hover {
-  background: #ddd;
-  color: #000;
+    background: #ddd;
+    color: #000;
 }
 .rectangle:hover {
-  border: 3px solid red;
+    border: 3px solid red;
 }
 
 .__annotateTextTool {
-  border-radius: 4px;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 .__annotateTextTool button {
-  pointer-events: auto;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
 }
 .__annotateTextTool button:hover {
-  background: #ddd;
-  color: #000;
+    background: #ddd;
+    color: #000;
 }
 .__annotateTextTool:hover {
-  border: 3px solid red;
+    border: 3px solid red;
 }
 
 .censored {
-  border-radius: 4px;
-  position: absolute;
-  background-color: #000;
-  pointer-events: none;
+    border-radius: 4px;
+    position: absolute;
+    background-color: #000;
+    pointer-events: none;
 }
 .censored button {
-  pointer-events: auto;
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+    pointer-events: auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
 }
 .censored button:hover {
-  background: #ddd;
-  color: #000;
+    background: #ddd;
+    color: #000;
 }
 .censored:hover {
-  border: 3px solid red;
-  background-color: rgba(0, 0, 0, 0.7);
+    border: 3px solid red;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .snipping__captureScreenshotContainer {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  z-index: 999;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 999;
 }
 .snipping__captureScreenshotContainer .snipping__captureScreenshotBtn {
-  padding: 7px;
-  border: 0;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  cursor: pointer;
-  transform: rotateZ(-90deg) translateX(50%) translateY(3px);
-  transform-origin: 100% 100%;
-  background-color: #f24a72;
-  color: #fff;
+    padding: 7px;
+    border: 0;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    cursor: pointer;
+    transform: rotateZ(-90deg) translateX(50%) translateY(3px);
+    transform-origin: 100% 100%;
+    background-color: #f24a72;
+    color: #fff;
 }
