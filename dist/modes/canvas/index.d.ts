@@ -1,12 +1,12 @@
 /** stylesheet */
 import '../../styles/style.scss';
-import { ICanvas_Mode } from '../../types/IModes/ICanvas';
+import { ICanvasMode } from '../../types/IModes/ICanvas';
 declare class Snipping {
     buttonLabel: string;
-    markMode: ICanvas_Mode.IMarkMode;
+    markMode: ICanvasMode.IMarkMode;
     snippingHeaderHTML: string;
     appId: string | number;
-    constructor(config: ICanvas_Mode.IConfig);
+    constructor(config: ICanvasMode.IConfig);
     _clearMarkers(markerName: string): void;
     _delMarker(e: any): string;
     _initDraw(canvas: HTMLDivElement): void;

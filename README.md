@@ -14,10 +14,10 @@ yarn run build-lib
 
 ### canvas mode
 
--   Features
-    -   Capture screenshot of your current viewport window
-    -   You can mark or censor on that captured screenshot
-    -   Annotate with text
+- Features
+  - Capture screenshot of your current viewport window
+  - You can mark or censor on that captured screenshot
+  - Annotate with text
 
 ### Usages
 
@@ -26,8 +26,8 @@ yarn run build-lib
 import { snipping } from '$libDir/lib/dist';
 
 let anything = new snipping({
-    buttonLabel: 'Feedback',
-    initialMarkMode: 'mark'
+  buttonLabel: 'Feedback',
+  initialMarkMode: 'mark'
 });
 
 /*

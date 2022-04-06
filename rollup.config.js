@@ -11,32 +11,32 @@ import scss from 'rollup-plugin-scss';
 import babel from 'rollup-plugin-babel';
 
 export default [
-    {
-        input: './src/index.ts',
-        output: [
-            {
-                file: 'dist/index.esm.js',
-                format: 'esm'
-            },
-            {
-                file: 'dist/index.js',
-                format: 'cjs'
-            }
-        ],
-        plugins: [
-            babel({
-                exclude: 'node_modules/**',
-                presets: ['@babel/preset-react']
-            }),
-            typescript(),
-            external(),
-            resolve(),
-            scss({
-                output: './dist/css/style.css',
-                failOnError: true,
-                runtime: require('sass')
-            })
-            // terser(),
-        ]
-    }
+  {
+    input: './src/index.ts',
+    output: [
+      {
+        file: 'dist/index.esm.js',
+        format: 'esm'
+      },
+      {
+        file: 'dist/index.js',
+        format: 'cjs'
+      }
+    ],
+    plugins: [
+      babel({
+        exclude: 'node_modules/**',
+        presets: ['@babel/preset-react']
+      }),
+      typescript(),
+      external(),
+      resolve(),
+      scss({
+        output: './dist/css/style.css',
+        failOnError: true,
+        runtime: require('sass')
+      })
+      // terser(),
+    ]
+  }
 ];
