@@ -3,19 +3,19 @@ import html2canvas from 'html2canvas';
 
 /** stylesheet */
 import '../../styles/style.scss';
-import { ICanvas_Mode } from '../../types/IModes/ICanvas';
+import { ICanvasMode } from '../../types/IModes/ICanvas';
 
 class Snipping {
-    buttonLabel: string;
-    markMode: ICanvas_Mode.IMarkMode;
-    snippingHeaderHTML: string;
-    appId: string | number;
+  buttonLabel: string;
+  markMode: ICanvasMode.IMarkMode;
+  snippingHeaderHTML: string;
+  appId: string | number;
 
-    constructor(config: ICanvas_Mode.IConfig) {
-        const { buttonLabel, initialMarkMode, appId } = config;
-        this.buttonLabel = buttonLabel || 'Send Feedback';
-        this.markMode = initialMarkMode || 'mark';
-        this.snippingHeaderHTML = `
+  constructor(config: ICanvasMode.IConfig) {
+    const { buttonLabel, initialMarkMode, appId } = config;
+    this.buttonLabel = buttonLabel || 'Send Feedback';
+    this.markMode = initialMarkMode || 'mark';
+    this.snippingHeaderHTML = `
         <div>
         <button class="__screenshotBtn">Retake screenshot</button>
         </div>
@@ -40,248 +40,246 @@ class Snipping {
 
         </button>
         </div>`;
-        this.appId = appId;
+    this.appId = appId;
+  }
+
+  _clearMarkers(markerName: string) {
+    const markers: any = document.getElementsByClassName(markerName);
+    while (markers[0]) {
+      markers[0].parentNode.removeChild(markers[0]);
     }
+  }
 
-    _clearMarkers(markerName: string) {
-        const markers: any = document.getElementsByClassName(markerName);
-        while (markers[0]) {
-            markers[0].parentNode.removeChild(markers[0]);
-        }
+  _delMarker(e: any) {
+    return (e.srcElement.parentElement.style.display = 'none');
+  }
+
+  _initDraw(canvas: HTMLDivElement) {
+    const that = this;
+    function setMousePosition(e: MouseEvent) {
+      const ev: any = e || window.event; // Moz || IE
+      if (ev.pageX) {
+        // Moz
+        mouse.x = ev.layerX;
+        mouse.y = ev.layerY;
+      } else if (ev.clientX) {
+        // IE
+        mouse.x = ev.layerX;
+        mouse.y = ev.layerY;
+      }
     }
+    // ..
+    const mouse = {
+      x: 0,
+      y: 0,
+      startX: 0,
+      startY: 0
+    };
+    let _marker: HTMLDivElement | null = null;
+    let _delBtn: HTMLButtonElement | null = null;
+    let __editableTextAnnotate: HTMLButtonElement | null = null;
 
-    _delMarker(e: any) {
-        return (e.srcElement.parentElement.style.display = 'none');
-    }
-
-    _initDraw(canvas: HTMLDivElement) {
-        let that = this;
-        function setMousePosition(e: MouseEvent) {
-            var ev: any = e || window.event; //Moz || IE
-            if (ev.pageX) {
-                //Moz
-                mouse.x = ev.layerX;
-                mouse.y = ev.layerY;
-            } else if (ev.clientX) {
-                //IE
-                mouse.x = ev.layerX;
-                mouse.y = ev.layerY;
-            }
-        }
-
-        var mouse = {
-            x: 0,
-            y: 0,
-            startX: 0,
-            startY: 0
-        };
-        var _marker: HTMLDivElement | null = null;
-        var _delBtn: HTMLButtonElement | null = null;
-        var __editableTextAnnotate: HTMLButtonElement | null = null;
-
-        canvas.onmousemove = function (e) {
-            setMousePosition(e);
-            if (_marker !== null) {
-                style(_marker, {
-                    width: Math.abs(mouse.x - mouse.startX) + 'px',
-                    height: Math.abs(mouse.y - mouse.startY) + 'px',
-                    left: mouse.x - mouse.startX < 0 ? mouse.x + 'px' : mouse.startX + 'px',
-                    top: mouse.y - mouse.startY < 0 ? mouse.y + 'px' : mouse.startY + 'px'
-                });
-            }
-        };
-
-        canvas.onclick = function (e: MouseEvent) {
-            console.log(e);
-            if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
-            if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
-            if (_marker !== null) {
-                _marker = null;
-                canvas.style.cursor = 'default';
-            } else if ((e?.target as HTMLInputElement)?.name === 'delMarker') {
-                _marker = null;
-                canvas.style.cursor = 'default';
-            } else {
-                canvas.style.cursor = 'crosshair';
-                if (that.markMode !== 'text') {
-                    mouse.startX = mouse.x;
-                    mouse.startY = mouse.y;
-                    /** mark delete button */
-                    _delBtn = _createElement({
-                        Tag: 'button',
-                        innerHTML: 'X',
-                        name: 'delMarker',
-                        classlist: ['__snipping_marker_delete']
-                    });
-                    (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
-                    _marker = _createElement({
-                        Tag: 'div'
-                    });
-                    (_marker as HTMLDivElement).classList.add(that.markMode === 'mark' ? 'rectangle' : 'censored');
-
-                    (_marker as HTMLDivElement).appendChild(_delBtn as Node);
-                    (_marker as HTMLDivElement).style.left = mouse.x + 'px';
-                    (_marker as HTMLDivElement).style.top = mouse.y + 'px';
-                    canvas.appendChild(_marker as Node);
-                } else {
-                    mouse.startX = mouse.x;
-                    mouse.startY = mouse.y;
-                    /** mark delete button */
-                    _delBtn = _createElement({
-                        Tag: 'button',
-                        innerHTML: 'X',
-                        name: 'delMarker',
-                        classlist: ['__snipping_marker_delete']
-                    });
-                    (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
-                    _marker = _createElement({
-                        Tag: 'div',
-                        classList: ['__annotateTextTool']
-                    });
-                    __editableTextAnnotate = _createElement({
-                        Tag: 'p',
-                        innerHTML: 'Your text',
-                        classList: ['__annotateTextToolInput']
-                    });
-
-                    __editableTextAnnotate?.setAttribute('contenteditable', 'true');
-
-                    (_marker as HTMLDivElement).appendChild(_delBtn as Node);
-                    (_marker as HTMLDivElement).appendChild(__editableTextAnnotate as Node);
-                    (_marker as HTMLDivElement).style.left = mouse.x + 'px';
-                    (_marker as HTMLDivElement).style.top = mouse.y + 'px';
-                    canvas.appendChild(_marker as Node);
-                }
-            }
-        };
-    }
-
-    _takeScreenShot = () => {
-        const func = this;
-        const mainContainer = getElement('.snippingFeedBackContainer')[0];
-        (mainContainer as any).style.display = 'none';
-        const snippingContent = getElement('.snippingContent')[0];
-        html2canvas(document.body, {
-            useCORS: true,
-            x: window.scrollX,
-            y: window.scrollY,
-            width: window.innerWidth,
-            height: window.innerHeight
-        }).then(function (canvas) {
-            (mainContainer as any).style.display = 'flex';
-            canvas.setAttribute('id', 'cnv');
-            style(canvas, {
-                width: '100%',
-                height: '90%'
-            });
-            (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png');
-            func._initDraw(snippingContent);
+    canvas.onmousemove = function (e) {
+      setMousePosition(e);
+      if (_marker !== null) {
+        style(_marker, {
+          width: Math.abs(mouse.x - mouse.startX) + 'px',
+          height: Math.abs(mouse.y - mouse.startY) + 'px',
+          left: mouse.x - mouse.startX < 0 ? mouse.x + 'px' : mouse.startX + 'px',
+          top: mouse.y - mouse.startY < 0 ? mouse.y + 'px' : mouse.startY + 'px'
         });
+      }
     };
 
-    _done(cb: Function) {
-        let that = this;
-        that._clearMarkers('__snipping_marker_delete');
-        const snippingContent = document.getElementsByClassName('snippingContent')[0];
-        const feedbackTitle = getElement('._feedbackInfoInput')[0];
-        const feedbackDescription = getElement('._feedbackInfoTextarea')[0];
+    canvas.onclick = function (e: MouseEvent) {
+      console.log(e);
+      if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
+      if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
+      if (_marker !== null) {
+        _marker = null;
+        canvas.style.cursor = 'default';
+      } else if ((e?.target as HTMLInputElement)?.name === 'delMarker') {
+        _marker = null;
+        canvas.style.cursor = 'default';
+      } else {
+        canvas.style.cursor = 'crosshair';
+        if (that.markMode !== 'text') {
+          mouse.startX = mouse.x;
+          mouse.startY = mouse.y;
+          /** mark delete button */
+          _delBtn = _createElement({
+            Tag: 'button',
+            innerHTML: 'X',
+            name: 'delMarker',
+            classlist: ['__snipping_marker_delete']
+          });
+          (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
+          _marker = _createElement({
+            Tag: 'div'
+          });
+          (_marker as HTMLDivElement).classList.add(that.markMode === 'mark' ? 'rectangle' : 'censored');
 
-        html2canvas(snippingContent as HTMLElement, {
-            useCORS: true
-        }).then(function (canvas) {
-            let image = canvas.toDataURL('image/png');
-            let data = {
-                // image,
-                appId: that.appId,
-                title: feedbackTitle.value,
-                description: feedbackDescription.value
-            };
-            console.log(data);
-            (document.getElementById('screenshot') as HTMLImageElement).src = image;
-            that._clearMarkers('rectangle');
-            that._clearMarkers('censored');
-            cb(data);
-        });
-    }
+          (_marker as HTMLDivElement).appendChild(_delBtn as Node);
+          (_marker as HTMLDivElement).style.left = mouse.x + 'px';
+          (_marker as HTMLDivElement).style.top = mouse.y + 'px';
+          canvas.appendChild(_marker as Node);
+        } else {
+          mouse.startX = mouse.x;
+          mouse.startY = mouse.y;
+          /** mark delete button */
+          _delBtn = _createElement({
+            Tag: 'button',
+            innerHTML: 'X',
+            name: 'delMarker',
+            classlist: ['__snipping_marker_delete']
+          });
+          (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
+          _marker = _createElement({
+            Tag: 'div',
+            classList: ['__annotateTextTool']
+          });
+          __editableTextAnnotate = _createElement({
+            Tag: 'p',
+            innerHTML: 'Your text',
+            classList: ['__annotateTextToolInput']
+          });
 
-    __changeActiveTool = (el: HTMLElement, inActiveEl: Array<HTMLElement>) => {
-        el.classList.add('__snipping_button_active');
-        inActiveEl?.map((el) => {
-            el.classList.remove('__snipping_button_active');
-        });
+          __editableTextAnnotate?.setAttribute('contenteditable', 'true');
+
+          (_marker as HTMLDivElement).appendChild(_delBtn as Node);
+          (_marker as HTMLDivElement).appendChild(__editableTextAnnotate as Node);
+          (_marker as HTMLDivElement).style.left = mouse.x + 'px';
+          (_marker as HTMLDivElement).style.top = mouse.y + 'px';
+          canvas.appendChild(_marker as Node);
+        }
+      }
     };
+  }
 
-    _initEvents(cb: Function) {
-        const retake__screenshotBtn = getElement('.__screenshotBtn')[0];
-        const doneBtn = getElement('._feedbackSubmitBtn')[0];
+  _takeScreenShot = () => {
+    const func = this;
+    const mainContainer = getElement('.snippingFeedBackContainer')[0];
+    (mainContainer as any).style.display = 'none';
+    const snippingContent = getElement('.snippingContent')[0];
+    html2canvas(document.body, {
+      useCORS: true,
+      x: window.scrollX,
+      y: window.scrollY,
+      width: window.innerWidth,
+      height: window.innerHeight
+    }).then(function (canvas) {
+      (mainContainer as any).style.display = 'flex';
+      canvas.setAttribute('id', 'cnv');
+      style(canvas, {
+        width: '100%',
+        height: '90%'
+      });
+      (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png');
+      func._initDraw(snippingContent);
+    });
+  };
 
-        /** annotate tools buttons */
-        const __markBtn = getElement('.__markBtn')[0];
-        const __cencorBtn = getElement('.__cencorBtn')[0];
-        const __textBtn = getElement('.__textBtn')[0];
+  _done(cb: Function) {
+    const that = this;
+    that._clearMarkers('__snipping_marker_delete');
+    const snippingContent = document.getElementsByClassName('snippingContent')[0];
+    const feedbackTitle = getElement('._feedbackInfoInput')[0];
+    const feedbackDescription = getElement('._feedbackInfoTextarea')[0];
 
-        retake__screenshotBtn.addEventListener('click', () => {
-            this._clearMarkers('rectangle');
-            this._clearMarkers('censored');
-            getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-            getElement('.snipping__captureScreenshotContainer')[0].style.display = 'block';
-        });
+    html2canvas(snippingContent as HTMLElement, {
+      useCORS: true
+    }).then(function (canvas) {
+      const image = canvas.toDataURL('image/png');
+      const data = {
+        // image,
+        appId: that.appId,
+        title: feedbackTitle.value,
+        description: feedbackDescription.value
+      };
+      (document.getElementById('screenshot') as HTMLImageElement).src = image;
+      that._clearMarkers('rectangle');
+      that._clearMarkers('censored');
+      cb(data);
+    });
+  }
 
-        doneBtn.addEventListener('click', (event: MouseEvent) => {
-            event.preventDefault();
-            this._done(cb);
-        });
+  __changeActiveTool = (el: HTMLElement, inActiveEl: Array<HTMLElement>) => {
+    el.classList.add('__snipping_button_active');
+    inActiveEl?.map((el) => {
+      el.classList.remove('__snipping_button_active');
+      return 0;
+    });
+  };
 
-        __markBtn.addEventListener('click', () => {
-            this.markMode = 'mark';
-            this.__changeActiveTool(__markBtn, [__cencorBtn, __textBtn]);
-        });
-        __cencorBtn.addEventListener('click', () => {
-            this.markMode = 'censored';
-            this.__changeActiveTool(__cencorBtn, [__markBtn, __textBtn]);
-        });
-        __textBtn.addEventListener('click', () => {
-            this.markMode = 'text';
-            this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
-        });
-    }
+  _initEvents(cb: Function) {
+    const retakeScreenshotBtn = getElement('.__screenshotBtn')[0];
+    const doneBtn = getElement('._feedbackSubmitBtn')[0];
 
-    //.
+    /** annotate tools buttons */
+    const __markBtn = getElement('.__markBtn')[0];
+    const __cencorBtn = getElement('.__cencorBtn')[0];
+    const __textBtn = getElement('.__textBtn')[0];
 
-    _prepareDom() {
-        /** main container */
-        const _container = _createElement({
-            Tag: 'div',
-            classList: ['snippingFeedBackContainer']
-        });
-        style(_container, {
-            display: 'none'
-        });
+    retakeScreenshotBtn.addEventListener('click', () => {
+      this._clearMarkers('rectangle');
+      this._clearMarkers('censored');
+      getElement('.snippingFeedBackContainer')[0].style.display = 'none';
+      getElement('.snipping__captureScreenshotContainer')[0].style.display = 'block';
+    });
 
-        /** feedback container */
-        const _snippingContainer = _createElement({
-            Tag: 'div',
-            classList: ['snippingContainer'],
-            id: 'snippingContainer'
-        });
+    doneBtn.addEventListener('click', (event: MouseEvent) => {
+      event.preventDefault();
+      this._done(cb);
+    });
 
-        style(_snippingContainer, {
-            width: '80%',
-            height: '95%'
-        });
+    __markBtn.addEventListener('click', () => {
+      this.markMode = 'mark';
+      this.__changeActiveTool(__markBtn, [__cencorBtn, __textBtn]);
+    });
+    __cencorBtn.addEventListener('click', () => {
+      this.markMode = 'censored';
+      this.__changeActiveTool(__cencorBtn, [__markBtn, __textBtn]);
+    });
+    __textBtn.addEventListener('click', () => {
+      this.markMode = 'text';
+      this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
+    });
+  }
 
-        /** snipping header */
-        const _snippingHeader = _createElement({
-            Tag: 'div',
-            classList: ['snippingHeader'],
-            innerHTML: this.snippingHeaderHTML
-        });
+  _prepareDom() {
+    /** main container */
+    const _container = _createElement({
+      Tag: 'div',
+      classList: ['snippingFeedBackContainer']
+    });
+    style(_container, {
+      display: 'none'
+    });
 
-        /** snipping info area */
-        const _snippingInfo = _createElement({
-            Tag: 'div',
-            classList: ['_snippingInfo'],
-            innerHTML: `<div>
+    /** feedback container */
+    const _snippingContainer = _createElement({
+      Tag: 'div',
+      classList: ['snippingContainer'],
+      id: 'snippingContainer'
+    });
+
+    style(_snippingContainer, {
+      width: '80%',
+      height: '95%'
+    });
+
+    /** snipping header */
+    const _snippingHeader = _createElement({
+      Tag: 'div',
+      classList: ['snippingHeader'],
+      innerHTML: this.snippingHeaderHTML
+    });
+
+    /** snipping info area */
+    const _snippingInfo = _createElement({
+      Tag: 'div',
+      classList: ['_snippingInfo'],
+      innerHTML: `<div>
             <header>
             <h1>Rara Feedback Portal</h1>
             </header>
@@ -304,62 +302,62 @@ class Snipping {
             <button type="button" class="_feedbackSubmitBtn">Submit</button>
             </form>
             </div>`
-        });
+    });
 
-        /** snipping content */
+    /** snipping content */
 
-        const _snippingContent = _createElement({
-            Tag: 'div',
-            classList: ['snippingContent'],
-            id: 'snippingContent'
-        });
-        style(_snippingContent, {
-            width: '100%',
-            height: '95%'
-        });
+    const _snippingContent = _createElement({
+      Tag: 'div',
+      classList: ['snippingContent'],
+      id: 'snippingContent'
+    });
+    style(_snippingContent, {
+      width: '100%',
+      height: '95%'
+    });
 
-        const _snapedImg: any = _createElement({
-            Tag: 'img',
-            id: 'screenshot'
-        });
+    const _snapedImg: any = _createElement({
+      Tag: 'img',
+      id: 'screenshot'
+    });
 
-        /** rendering elements */
-        _snippingContainer.appendChild(_snippingHeader);
-        _snippingContent.appendChild(_snapedImg);
-        _snippingContainer.appendChild(_snippingContent);
-        _container.appendChild(_snippingContainer);
-        _container.appendChild(_snippingInfo);
-        document.body.appendChild(_container);
+    /** rendering elements */
+    _snippingContainer.appendChild(_snippingHeader);
+    _snippingContent.appendChild(_snapedImg);
+    _snippingContainer.appendChild(_snippingContent);
+    _container.appendChild(_snippingContainer);
+    _container.appendChild(_snippingInfo);
+    document.body.appendChild(_container);
+  }
+
+  _prepareSnapper() {
+    const _snapButtonContainer = _createElement({
+      Tag: 'div',
+      classList: ['snipping__captureScreenshotContainer']
+    });
+    const _snapButton = _createElement({
+      Tag: 'button',
+      innerHTML: this.buttonLabel,
+      classList: ['snipping__captureScreenshotBtn']
+    });
+
+    _snapButton.addEventListener('click', () => {
+      _snapButtonContainer.style.display = 'none';
+      this._takeScreenShot();
+    });
+    _snapButtonContainer.appendChild(_snapButton);
+    document.body.appendChild(_snapButtonContainer);
+  }
+
+  //! TODO
+  init(cb: Function) {
+    if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+      this._prepareSnapper();
+      this._prepareDom();
+      // ! TODO
+      this._initEvents(cb);
     }
-
-    _prepareSnapper() {
-        let _snapButtonContainer = _createElement({
-            Tag: 'div',
-            classList: ['snipping__captureScreenshotContainer']
-        });
-        let _snapButton = _createElement({
-            Tag: 'button',
-            innerHTML: this.buttonLabel,
-            classList: ['snipping__captureScreenshotBtn']
-        });
-
-        _snapButton.addEventListener('click', () => {
-            _snapButtonContainer.style.display = 'none';
-            this._takeScreenShot();
-        });
-        _snapButtonContainer.appendChild(_snapButton);
-        document.body.appendChild(_snapButtonContainer);
-    }
-
-    //! TODO
-    init(cb: Function) {
-        if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-            this._prepareSnapper();
-            this._prepareDom();
-            // ! TODO
-            this._initEvents(cb);
-        }
-    }
+  }
 }
 
 export { Snipping };
