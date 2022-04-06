@@ -10,14 +10,22 @@
     "scripts": {
         "build-lib": "rollup -c",
         "watch": "rollup -c -w",
-        "prettier": "prettier --write ."
+        "prettier": "prettier --write .",
+        "lint": "eslint src/**/*.ts",
+        "prepare": "husky install"
     },
     "author": "sudarshan rai",
     "license": "MIT",
     "devDependencies": {
         "@babel/core": "^7.17.5",
         "@rollup/plugin-node-resolve": "^13.1.3",
+        "@typescript-eslint/eslint-plugin": "^5.18.0",
+        "@typescript-eslint/parser": "^5.18.0",
         "babel-loader": "^8.2.3",
+        "eslint": "^7.12.1",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "husky": "^7.0.4",
         "prettier": "^2.6.2",
         "rollup": "^2.68.0",
         "rollup-plugin-babel": "^4.4.0",
