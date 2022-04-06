@@ -22,18 +22,18 @@ const getDimensionOfElement = (elName: string) => {
 };
 
 const style = (element: HTMLElement, style: any) => {
-    for (const property in style) element.style[(property as any)] = style[property];
+    for (const property in style) element.style[property as any] = style[property];
 };
 
-const _createElement = (initObj:any) => {
+const _createElement = (initObj: any) => {
     var element = document.createElement(initObj.Tag);
     for (var prop in initObj) {
         if (prop === 'childNodes') {
-            initObj.childNodes.forEach(function (node:Node) {
+            initObj.childNodes.forEach(function (node: Node) {
                 element.appendChild(node);
             });
         } else if (prop === 'attributes') {
-            initObj.attributes.forEach(function (attr:any) {
+            initObj.attributes.forEach(function (attr: any) {
                 element.setAttribute(attr.key, attr.value);
             });
         } else element[prop] = initObj[prop];

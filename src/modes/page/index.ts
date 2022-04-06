@@ -1,7 +1,7 @@
 import '../../styles/style.scss';
 import html2canvas from 'html2canvas';
 
-let paths:any= [];
+let paths: any = [];
 const mouseMove = (event: any) => {
     event.target.style.boxShadow = 'inset 0px 0px 1px 2px yellow';
 };
