@@ -42,10 +42,33 @@
     width: 100%;
 }
 .rectangle {
-    border: 3px solid yellow;
+    border: 3px solid rgb(255, 255, 0);
     border-radius: 4px;
     position: absolute;
     pointer-events: none;
+    button {
+        pointer-events: auto;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        color: $white;
+        &:hover {
+            background: $containerColor;
+            color: $black;
+        }
+    }
+    &:hover {
+        border: 3px solid red;
+    }
+}
+.__annotateTextTool {
+    border-radius: 4px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.1);
     button {
         pointer-events: auto;
         width: 20px;
@@ -90,11 +113,6 @@
         border: 3px solid red;
         background-color: rgba(0, 0, 0, 0.7);
     }
-}
-
-.__snipping_button_active {
-    background-color: $activeBtn;
-    color: $white;
 }
 
 .snipping__captureScreenshotContainer {

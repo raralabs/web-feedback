@@ -9,12 +9,28 @@
   justify-content: center;
   align-items: flex-end;
 }
+.snippingFeedBackContainer .__annotateTools {
+  background-color: #fff;
+  border-radius: 5px;
+  display: flex;
+}
 .snippingFeedBackContainer button {
   padding: 5px;
   border: 0;
-  border-radius: 4px;
   margin: 0 4px 0 0;
   cursor: pointer;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.snippingFeedBackContainer .__snipping_button_active {
+  background-color: #f24a72;
+  color: #fff;
+}
+.snippingFeedBackContainer .__snipping_button_active svg,
+.snippingFeedBackContainer .__snipping_button_active path {
+  fill: #fff;
 }
 .snippingFeedBackContainer .snippingContainer {
   height: 85%;
@@ -53,12 +69,12 @@
 }
 ._snippingInfo header {
   padding: 10px;
-  border-bottom: 2px solid #186dae;
+  border-bottom: 2px solid #f24a72;
 }
 ._snippingInfo header h1 {
   font-size: 1.6vw;
   text-align: center;
-  color: #186dae;
+  color: #f24a72;
 }
 ._snippingInfo form {
   padding: 10px 20px 10px 20px;
@@ -75,12 +91,13 @@
   border-radius: 4px;
   border: 1px solid #aaaa;
   margin: 0 0 10px 0;
+  outline: none;
 }
 ._snippingInfo form ._feedbackInfoTextarea {
   height: 140px;
 }
 ._snippingInfo form ._feedbackSubmitBtn {
-  background-color: #186dae;
+  background-color: #f24a72;
   width: 100%;
   padding: 6px;
   color: #fff;
@@ -153,6 +170,30 @@
   border: 3px solid red;
 }
 
+.__annotateTextTool {
+  border-radius: 4px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.__annotateTextTool button {
+  pointer-events: auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+.__annotateTextTool button:hover {
+  background: #ddd;
+  color: #000;
+}
+.__annotateTextTool:hover {
+  border: 3px solid red;
+}
+
 .censored {
   border-radius: 4px;
   position: absolute;
@@ -179,11 +220,6 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.__snipping_button_active {
-  background-color: #4673ff;
-  color: #fff;
-}
-
 .snipping__captureScreenshotContainer {
   position: fixed;
   top: 50%;
@@ -198,6 +234,6 @@
   cursor: pointer;
   transform: rotateZ(-90deg) translateX(50%) translateY(3px);
   transform-origin: 100% 100%;
-  background-color: #186dae;
+  background-color: #f24a72;
   color: #fff;
 }

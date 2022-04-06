@@ -17,7 +17,7 @@ yarn run build-lib
 -   Features
     -   Capture screenshot of your current viewport window
     -   You can mark or censor on that captured screenshot
-    -   remove markers
+    -   Annotate with text
 
 ### Usages
 
@@ -30,7 +30,11 @@ let anything = new snipping({
     initialMarkMode: 'mark'
 });
 
-anything.init(); // initialize on app start
+/*
+ * initialize on app start
+ * it also return callback with submit data
+ */
+anything.init((data) => {});
 
 /*
  * or you can initialize using calling anything.init() func on any events.
