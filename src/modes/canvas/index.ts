@@ -16,7 +16,6 @@ class Snipping {
 
   constructor(config: ICanvasMode.IConfig) {
     const { buttonLabel, initialMarkMode, appId, enableForm, buttonPosition } = config;
-    console.log(config);
     this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
     this.enableForm = enableForm || false;
