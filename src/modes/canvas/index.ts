@@ -9,6 +9,7 @@ import { getIcon } from '../../res';
 class Snipping {
   buttonLabel: string;
   markMode: ICanvasMode.IMarkMode;
+  annotateLists: any[];
   snippingHeaderHTML: string;
   appId: string | number;
   enableForm: boolean;
@@ -22,6 +23,7 @@ class Snipping {
     this.enableForm = enableForm || false;
     this.appId = appId;
     this.buttonPosition = buttonPosition || 'bottom';
+    this.annotateLists = [];
 
     /** internal configs */
     this.snippingHeaderHTML = `
@@ -30,6 +32,11 @@ class Snipping {
     
         <button title="close annotate mode" class="__screenshotBtn __snipping_button_default_active">
          ${getIcon('close')}
+        </button>
+
+        <button title="undo" class="__undoBtn">
+        ${getIcon('undo')}
+        <sub class="__undoElCounts">${this.annotateLists?.length !== 0 ? this.annotateLists?.length : ''}</sub>
         </button>
 
         <button title="toggle mark annotate mode" class="__markBtn __snipping_button_active">
@@ -50,6 +57,8 @@ class Snipping {
 
     this.textAnnotateCount = 1;
   }
+
+  // .....
 
   _clearMarkers(markerName: string) {
     const markers: any = document.getElementsByClassName(markerName);
@@ -147,6 +156,8 @@ class Snipping {
           (_marker as HTMLDivElement).style.left = mouse.x + 'px';
           (_marker as HTMLDivElement).style.top = mouse.y + 'px';
           canvas.appendChild(_marker as Node);
+          that.annotateLists.push(_marker);
+          getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
         } else {
           mouse.startX = mouse.x;
           mouse.startY = mouse.y;
@@ -182,6 +193,8 @@ class Snipping {
           (_textAnnotateEl as HTMLDivElement).style.left = mouse.initialX + 'px';
           (_textAnnotateEl as HTMLDivElement).style.top = mouse.initialY + 'px';
           canvas.appendChild(_textAnnotateEl as Node);
+          that.annotateLists.push(_textAnnotateEl);
+          getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
           canvas.style.cursor = 'default';
           that.textAnnotateCount += 1;
           return 0;
@@ -189,7 +202,6 @@ class Snipping {
       }
     };
   }
-  // ..........................................
 
   _takeScreenShot = () => {
     const func = this;
@@ -253,6 +265,7 @@ class Snipping {
     const doneBtn = getElement('._feedbackSubmitBtn')[0];
 
     /** annotate tools buttons */
+    const __undoBtn = getElement('.__undoBtn')[0];
     const __markBtn = getElement('.__markBtn')[0];
     const __cencorBtn = getElement('.__cencorBtn')[0];
     const __textBtn = getElement('.__textBtn')[0];
@@ -268,7 +281,12 @@ class Snipping {
       event.preventDefault();
       this._done(cb);
     });
-
+    __undoBtn.addEventListener('click', () => {
+      const currentAnnotateLists = this.annotateLists;
+      const lastAnnotateList = currentAnnotateLists.pop();
+      lastAnnotateList.style.display = 'none';
+      getElement('.__undoElCounts')[0].innerHTML = this.annotateLists.length.toString();
+    });
     __markBtn.addEventListener('click', () => {
       this.markMode = 'mark';
       this.__changeActiveTool(__markBtn, [__cencorBtn, __textBtn]);

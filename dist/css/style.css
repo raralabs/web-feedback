@@ -56,6 +56,9 @@
   align-items: center;
   border: 2px solid transparent;
 }
+.snippingFeedBackContainer button .__undoElCounts {
+  margin: 10px 0 0 0;
+}
 .snippingFeedBackContainer .__snipping_button_default_active {
   border: 2px solid #fff;
   transition: 0.3s;
@@ -253,7 +256,7 @@
   margin: 15px 0 0 0;
 }
 .__annotateTextTool .__annotateTextToolInput::before {
-  content: ' ';
+  content: " ";
   background-color: #fff;
   position: absolute;
   top: -5px;
