@@ -4,8 +4,12 @@ import { ICanvasMode } from '../../types/IModes/ICanvas';
 declare class Snipping {
     buttonLabel: string;
     markMode: ICanvasMode.IMarkMode;
+    annotateLists: any[];
     snippingHeaderHTML: string;
     appId: string | number;
+    enableForm: boolean;
+    buttonPosition: 'left' | 'bottom';
+    textAnnotateCount: number;
     constructor(config: ICanvasMode.IConfig);
     _clearMarkers(markerName: string): void;
     _delMarker(e: any): string;

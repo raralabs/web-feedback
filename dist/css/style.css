@@ -1,3 +1,12 @@
+.snippingFeedBackContainerOverlay {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 88;
+}
+
 .snippingFeedBackContainer {
   position: fixed;
   z-index: 999;
@@ -9,12 +18,34 @@
   justify-content: center;
   align-items: flex-end;
 }
-.snippingFeedBackContainer .__annotateTools {
-  background-color: #fff;
-  border-radius: 5px;
+.snippingFeedBackContainer .__headerActionBtns {
   display: flex;
 }
+.snippingFeedBackContainer .__headerActionBtns button {
+  width: fit-content;
+}
+.snippingFeedBackContainer .__headerActionBtns button:hover {
+  background-color: #fff;
+  border-radius: 4px;
+  transition: 0.3s;
+}
+.snippingFeedBackContainer .__headerActionBtns button:hover svg,
+.snippingFeedBackContainer .__headerActionBtns button:hover path {
+  fill: #f24a72;
+}
+.snippingFeedBackContainer .__annotateTools {
+  background-color: transparent;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  width: fit-content;
+  height: 50px;
+  padding: 4px;
+  gap: 0.7em;
+}
 .snippingFeedBackContainer button {
+  width: 40px;
+  height: 40px;
   padding: 5px;
   border: 0;
   margin: 0 4px 0 0;
@@ -23,28 +54,48 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 2px solid transparent;
+}
+.snippingFeedBackContainer button .__undoElCounts {
+  margin: 10px 0 0 0;
+}
+.snippingFeedBackContainer .__snipping_button_default_active {
+  border: 2px solid #fff;
+  transition: 0.3s;
+  border-radius: 4px;
+}
+.snippingFeedBackContainer .__snipping_button_default_active svg,
+.snippingFeedBackContainer .__snipping_button_default_active path {
+  fill: #fff;
 }
 .snippingFeedBackContainer .__snipping_button_active {
-  background-color: #f24a72;
-  color: #fff;
+  background-color: #fff;
+  color: #f24a72;
+  transition: 0.3s;
+  border-radius: 4px;
 }
 .snippingFeedBackContainer .__snipping_button_active svg,
 .snippingFeedBackContainer .__snipping_button_active path {
-  fill: #fff;
+  fill: #f24a72;
 }
 .snippingFeedBackContainer .snippingContainer {
-  height: 85%;
-  width: 80%;
+  height: 100%;
+  width: 100%;
   background: #f2f2f2;
-  border-radius: 7px;
-  padding: 10px;
+  border: 4px solid #f24a72;
+  position: relative;
 }
 .snippingFeedBackContainer .snippingContainer .snippingHeader {
   display: flex;
   justify-content: space-between;
-}
-.snippingFeedBackContainer .snippingContainer .snippingContent {
-  margin: 10px 0 0 0;
+  position: absolute;
+  z-index: 99;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f24a72;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .snippingFeedBackContainer .snippingContainer #snippingCanvas {
   display: block;
@@ -57,6 +108,10 @@
   width: 100%;
   border: 0;
   padding: 10px;
+}
+
+.__snippingInfoHidden {
+  display: none;
 }
 
 ._snippingInfo {
@@ -95,6 +150,9 @@
 }
 ._snippingInfo form ._feedbackInfoTextarea {
   height: 140px;
+}
+._snippingInfo form ._feedbackSubmitBtnHidden {
+  display: none;
 }
 ._snippingInfo form ._feedbackSubmitBtn {
   background-color: #f24a72;
@@ -143,6 +201,12 @@
 #screenshot {
   height: 100%;
   width: 100%;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .rectangle {
@@ -174,31 +238,61 @@
   border-radius: 4px;
   position: absolute;
   background-color: transparent;
-  border: 2px dashed;
+  border: 2px dashed transparent;
+  pointer-events: none;
+  width: 200px;
 }
-.__annotateTextTool p {
+.__annotateTextTool .__annotateTextToolInput {
   color: red;
-  font-weight: 700;
+  font-weight: lighter;
   text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
   outline: none;
+  pointer-events: all;
+  background-color: #fff;
+  padding: 4px;
+  border-radius: 3px;
+  position: relative;
+  z-index: 9;
+  margin: 15px 0 0 0;
+}
+.__annotateTextTool .__annotateTextToolInput::before {
+  content: " ";
+  background-color: #fff;
+  position: absolute;
+  top: -5px;
+  height: 20px;
+  width: 20px;
+  transform: rotate(40deg);
+  z-index: -1;
 }
 .__annotateTextTool button {
   pointer-events: auto;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  background: #f24a72;
+  padding: 13px;
   color: #fff;
+  border: 3px solid #fff;
+  font-weight: 700;
 }
-.__annotateTextTool button:hover {
-  background: #ddd;
-  color: #000;
+.__annotateTextTool button ._textAnnotateDelete {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.__annotateTextTool button:hover ._textAnnotateCount {
+  display: none;
+}
+.__annotateTextTool button:hover ._textAnnotateDelete {
+  display: flex;
 }
 .__annotateTextTool:hover {
-  border: 2px solid red;
+  border: 2px solid transparent;
 }
 
 .censored {
@@ -227,19 +321,35 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.snipping__captureScreenshotContainer {
+.snipping__captureScreenshotContainer_left {
   position: fixed;
   top: 50%;
   right: 0;
   z-index: 999;
 }
-.snipping__captureScreenshotContainer .snipping__captureScreenshotBtn {
+.snipping__captureScreenshotContainer_left .snipping__captureScreenshotBtn {
   padding: 7px;
   border: 0;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   cursor: pointer;
   transform: rotateZ(-90deg) translateX(50%) translateY(3px);
+  transform-origin: 100% 100%;
+  background-color: #f24a72;
+  color: #fff;
+}
+.snipping__captureScreenshotContainer_bottom {
+  position: fixed;
+  bottom: 0;
+  left: 10%;
+  z-index: 999;
+}
+.snipping__captureScreenshotContainer_bottom .snipping__captureScreenshotBtn {
+  padding: 7px;
+  border: 0;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  cursor: pointer;
   transform-origin: 100% 100%;
   background-color: #f24a72;
   color: #fff;

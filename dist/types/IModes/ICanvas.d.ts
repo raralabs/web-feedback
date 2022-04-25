@@ -6,6 +6,8 @@ export declare namespace ICanvasMode {
         buttonLabel?: string;
         initialMarkMode?: IMarkMode;
         appId: appId;
+        enableForm?: boolean;
+        buttonPosition?: 'left' | 'bottom';
     }
 }
 export interface feedbackData {
