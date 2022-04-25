@@ -1,31 +1,46 @@
 ### Instillation
 
 ```sh
+
 #clone project
+
 git clone https://github.com/raralabs/feedback.git
+
+
 
 cd feedback
 
+
+
 #install dependencies
+
 yarn
+
 #build lib -> /dist folder
+
 yarn run build-lib
+
 ```
 
-### canvas mode
+### Features
 
-- Features
-  - Capture screenshot of your current viewport window
-  - You can mark or censor on that captured screenshot
-  - Annotate with text
+- Capture screenshot of your current viewport window
+
+- Available annotate tools
+
+  - Mark
+  - Censor
+  - Text Annotate
+
+- Undo/Redo Annotates
 
 ### Usages
 
 ```js
 /** Development mode **/
-import { snipping } from '$libDir/lib/dist';
+import { Snipping } from '$libDir/lib/dist';
 
-let anything = new snipping({
+let anything = new Snipping({
   buttonLabel: 'Feedback',
   initialMarkMode: 'mark'
 });
