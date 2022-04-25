@@ -282,10 +282,12 @@ class Snipping {
       this._done(cb);
     });
     __undoBtn.addEventListener('click', () => {
-      const currentAnnotateLists = this.annotateLists;
-      const lastAnnotateList = currentAnnotateLists.pop();
-      lastAnnotateList.style.display = 'none';
-      getElement('.__undoElCounts')[0].innerHTML = this.annotateLists.length.toString();
+      if (this.annotateLists.length > 0) {
+        const currentAnnotateLists = this.annotateLists;
+        const lastAnnotateList = currentAnnotateLists.pop();
+        lastAnnotateList.style.display = 'none';
+        getElement('.__undoElCounts')[0].innerHTML = this.annotateLists.length.toString();
+      }
     });
     __markBtn.addEventListener('click', () => {
       this.markMode = 'mark';
