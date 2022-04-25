@@ -10,16 +10,33 @@ class Snipping {
   markMode: ICanvasMode.IMarkMode;
   snippingHeaderHTML: string;
   appId: string | number;
+  enableForm: boolean;
+  buttonPosition: 'left' | 'bottom';
+  textAnnotateCount: number;
 
   constructor(config: ICanvasMode.IConfig) {
-    const { buttonLabel, initialMarkMode, appId } = config;
-    this.buttonLabel = buttonLabel || 'Send Feedback';
+    const { buttonLabel, initialMarkMode, appId, enableForm, buttonPosition } = config;
+    console.log(config);
+    this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
+    this.enableForm = enableForm || false;
+    this.appId = appId;
+    this.buttonPosition = buttonPosition || 'bottom';
     this.snippingHeaderHTML = `
-        <div>
-        <button class="__screenshotBtn">Retake screenshot</button>
+        <div class="__headerActionBtns">
+        <button class="__screenshotBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.68 13.25C13.4268 14.1625 12.5403 15.4922 12.18 17H6.5L9.25 13.47L11.21 15.83L13.96 12.29L14.68 13.25V13.25ZM5 19V5H19V12.03C19.7 12.09 20.38 12.24 21 12.5V5C21 4.46957 20.7893 3.96086 20.4142 3.58579C20.0391 3.21071 19.5304 3 19 3H5C3.9 3 3 3.9 3 5V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H12.5C12.24 20.38 12.09 19.7 12.03 19H5ZM22 18.5V14.5L20.83 15.67C20.4586 15.2982 20.0174 15.0035 19.5317 14.8027C19.0461 14.6019 18.5255 14.499 18 14.5C15.79 14.5 14 16.29 14 18.5C14 20.71 15.79 22.5 18 22.5C19.68 22.5 21.12 21.47 21.71 20H20C19.6938 20.4072 19.2705 20.7111 18.7868 20.871C18.3031 21.031 17.7821 21.0393 17.2936 20.895C16.805 20.7506 16.3722 20.4605 16.0531 20.0633C15.734 19.6662 15.5438 19.1811 15.5081 18.6729C15.4723 18.1647 15.5927 17.6577 15.8531 17.2198C16.1134 16.7819 16.5014 16.434 16.9649 16.2227C17.4285 16.0113 17.9455 15.9467 18.4469 16.0374C18.9482 16.128 19.4098 16.3697 19.77 16.73L18 18.5H22Z" fill="white"/>
+</svg>
+
+        </button>
         </div>
         <div class="__annotateTools">
+        <button class="${this.enableForm ? '_feedbackSubmitBtnHidden' : '_feedbackSubmitBtn'}">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9.99997 15.586L6.70697 12.293L5.29297 13.707L9.99997 18.414L19.707 8.70697L18.293 7.29297L9.99997 15.586Z" fill="white"/>
+        </svg>
+        </button>
         <button class="__markBtn __snipping_button_active">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6.54375 2.17969H10.9078V0H6.54375V2.17969ZM2.17969 19.6359H0V24H4.36406V21.8203H2.17969V19.6359ZM6.54375 24H10.9078V21.8203H6.54375V24ZM2.17969 13.0922H0V17.4562H2.17969V13.0922ZM2.17969 6.54375H0V10.9078H2.17969V6.54375ZM0 4.36406H2.17969V2.17969H4.35938V0H0V4.36406ZM21.8203 10.9078H24V6.54375H21.8203V10.9078ZM13.0922 24H17.4562V21.8203H13.0922V24ZM19.6359 0V2.17969H21.8156V4.35938H24V0H19.6359ZM21.8203 17.4562H24V13.0922H21.8203V17.4562ZM21.8203 21.8203H19.6406V24H24V19.6359H21.8203V21.8203ZM13.0922 2.17969H17.4562V0H13.0922V2.17969Z" fill="black"/>
@@ -40,7 +57,9 @@ class Snipping {
 
         </button>
         </div>`;
-    this.appId = appId;
+    /** internal configs */
+
+    this.textAnnotateCount = 1;
   }
 
   _clearMarkers(markerName: string) {
@@ -56,6 +75,14 @@ class Snipping {
 
   _initDraw(canvas: HTMLDivElement) {
     const that = this;
+    const mouse = {
+      x: 0,
+      y: 0,
+      startX: 0,
+      startY: 0,
+      initialX: 0,
+      initialY: 0
+    };
     function setMousePosition(e: MouseEvent) {
       const ev: any = e || window.event; // Moz || IE
       if (ev.pageX) {
@@ -68,14 +95,22 @@ class Snipping {
         mouse.y = ev.layerY;
       }
     }
-    // ..
-    const mouse = {
-      x: 0,
-      y: 0,
-      startX: 0,
-      startY: 0
-    };
+
+    function setInitialPosition(e: MouseEvent) {
+      const ev: any = e || window.event; // Moz || IE
+      if (ev.pageX) {
+        // Moz
+        mouse.initialX = ev.layerX;
+        mouse.initialY = ev.layerY;
+      } else if (ev.clientX) {
+        // IE
+        mouse.initialX = ev.layerX;
+        mouse.initialY = ev.layerY;
+      }
+    }
+
     let _marker: HTMLDivElement | null = null;
+    let _textAnnotateEl: HTMLDivElement | null = null;
     let _delBtn: HTMLButtonElement | null = null;
     let __editableTextAnnotate: HTMLButtonElement | null = null;
 
@@ -92,7 +127,7 @@ class Snipping {
     };
 
     canvas.onclick = function (e: MouseEvent) {
-      console.log(e);
+      setInitialPosition(e);
       if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
       if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
       if (_marker !== null) {
@@ -129,12 +164,19 @@ class Snipping {
           /** mark delete button */
           _delBtn = _createElement({
             Tag: 'button',
-            innerHTML: 'X',
+            innerHTML: `
+            <span class="_textAnnotateCount">#${that.textAnnotateCount}</span>
+            <span class="_textAnnotateDelete">
+            <svg width="20" height="20" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 0.25C16.4869 0.249946 17.9161 0.825916 18.9875 1.85701C20.0588 2.88811 20.6891 4.29415 20.746 5.78L20.75 6H28C28.3197 6.00103 28.6269 6.12454 28.8583 6.34513C29.0898 6.56571 29.2279 6.86659 29.2443 7.1859C29.2607 7.5052 29.1541 7.81865 28.9465 8.06178C28.7388 8.30491 28.4459 8.45923 28.128 8.493L28 8.5H26.909L25.206 31.07C25.1253 32.1387 24.6438 33.1375 23.8579 33.8663C23.072 34.5951 22.0398 35 20.968 35H9.032C7.96021 35 6.92799 34.5951 6.14211 33.8663C5.35622 33.1375 4.8747 32.1387 4.794 31.07L3.09 8.5H2C1.69054 8.50014 1.39203 8.38549 1.16223 8.17823C0.932437 7.97097 0.787688 7.68583 0.756 7.378L0.75 7.25C0.75 6.603 1.242 6.07 1.872 6.007L2 6H9.25C9.25 4.47501 9.8558 3.01247 10.9341 1.93414C12.0125 0.855802 13.475 0.25 15 0.25V0.25ZM24.402 8.5H5.598L7.288 30.882C7.32127 31.3218 7.51942 31.7329 7.84279 32.0329C8.16616 32.3329 8.5909 32.4997 9.032 32.5H20.968C21.4093 32.5 21.8343 32.3333 22.1578 32.0333C22.4814 31.7332 22.6797 31.322 22.713 30.882L24.403 8.5H24.402ZM18.25 13.75C18.897 13.75 19.43 14.242 19.494 14.872L19.5 15V26C19.5015 26.3214 19.3791 26.6311 19.1583 26.8646C18.9374 27.0982 18.6351 27.2377 18.3141 27.2542C17.9931 27.2706 17.6781 27.1628 17.4345 26.9531C17.1909 26.7434 17.0374 26.4479 17.006 26.128L17 26V15C17 14.31 17.56 13.75 18.25 13.75ZM11.75 13.75C12.397 13.75 12.93 14.242 12.994 14.872L13 15V26C13.0015 26.3214 12.8791 26.6311 12.6583 26.8646C12.4374 27.0982 12.1351 27.2377 11.8141 27.2542C11.4931 27.2706 11.1781 27.1628 10.9345 26.9531C10.6909 26.7434 10.5374 26.4479 10.506 26.128L10.5 26V15C10.5 14.31 11.06 13.75 11.75 13.75ZM15 2.75C14.1699 2.74995 13.3712 3.06755 12.7678 3.63767C12.1644 4.20779 11.802 4.98719 11.755 5.816L11.75 6H18.25C18.25 5.13805 17.9076 4.3114 17.2981 3.7019C16.6886 3.09241 15.862 2.75 15 2.75V2.75Z" fill="white"/>
+            </svg>
+            </span>
+            `,
             name: 'delMarker',
-            classlist: ['__snipping_marker_delete']
+            classlist: ['__snipping_marker_delete __snipping_marker_textAnnotateCount']
           });
           (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
-          _marker = _createElement({
+          _textAnnotateEl = _createElement({
             Tag: 'div',
             classList: ['__annotateTextTool']
           });
@@ -146,11 +188,14 @@ class Snipping {
 
           __editableTextAnnotate?.setAttribute('contenteditable', 'true');
 
-          (_marker as HTMLDivElement).appendChild(_delBtn as Node);
-          (_marker as HTMLDivElement).appendChild(__editableTextAnnotate as Node);
-          (_marker as HTMLDivElement).style.left = mouse.x + 'px';
-          (_marker as HTMLDivElement).style.top = mouse.y + 'px';
-          canvas.appendChild(_marker as Node);
+          (_textAnnotateEl as HTMLDivElement).appendChild(_delBtn as Node);
+          (_textAnnotateEl as HTMLDivElement).appendChild(__editableTextAnnotate as Node);
+          (_textAnnotateEl as HTMLDivElement).style.left = mouse.initialX + 'px';
+          (_textAnnotateEl as HTMLDivElement).style.top = mouse.initialY + 'px';
+          canvas.appendChild(_textAnnotateEl as Node);
+          canvas.style.cursor = 'default';
+          that.textAnnotateCount += 1;
+          return 0;
         }
       }
     };
@@ -161,6 +206,7 @@ class Snipping {
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
     (mainContainer as any).style.display = 'none';
     const snippingContent = getElement('.snippingContent')[0];
+    getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
     html2canvas(document.body, {
       useCORS: true,
       x: window.scrollX,
@@ -168,6 +214,7 @@ class Snipping {
       width: window.innerWidth,
       height: window.innerHeight
     }).then(function (canvas) {
+      getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
       style(canvas, {
@@ -224,7 +271,7 @@ class Snipping {
       this._clearMarkers('rectangle');
       this._clearMarkers('censored');
       getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-      getElement('.snipping__captureScreenshotContainer')[0].style.display = 'block';
+      getElement(`.snipping__captureScreenshotContainer_${this.buttonPosition}`)[0].style.display = 'block';
     });
 
     doneBtn.addEventListener('click', (event: MouseEvent) => {
@@ -256,6 +303,14 @@ class Snipping {
       display: 'none'
     });
 
+    const _containerOverlay = _createElement({
+      Tag: 'div',
+      classList: ['snippingFeedBackContainerOverlay']
+    });
+    style(_containerOverlay, {
+      display: 'none'
+    });
+
     /** feedback container */
     const _snippingContainer = _createElement({
       Tag: 'div',
@@ -264,8 +319,8 @@ class Snipping {
     });
 
     style(_snippingContainer, {
-      width: '80%',
-      height: '95%'
+      width: '100%',
+      height: '100%'
     });
 
     /** snipping header */
@@ -274,11 +329,12 @@ class Snipping {
       classList: ['snippingHeader'],
       innerHTML: this.snippingHeaderHTML
     });
+    // .
 
     /** snipping info area */
     const _snippingInfo = _createElement({
       Tag: 'div',
-      classList: ['_snippingInfo'],
+      classList: [`${this.enableForm ? '_snippingInfo' : '__snippingInfoHidden'}`],
       innerHTML: `<div>
             <header>
             <h1>Rara Feedback Portal</h1>
@@ -313,7 +369,7 @@ class Snipping {
     });
     style(_snippingContent, {
       width: '100%',
-      height: '95%'
+      height: '100%'
     });
 
     const _snapedImg: any = _createElement({
@@ -328,12 +384,13 @@ class Snipping {
     _container.appendChild(_snippingContainer);
     _container.appendChild(_snippingInfo);
     document.body.appendChild(_container);
+    document.body.appendChild(_containerOverlay);
   }
 
   _prepareSnapper() {
     const _snapButtonContainer = _createElement({
       Tag: 'div',
-      classList: ['snipping__captureScreenshotContainer']
+      classList: [`snipping__captureScreenshotContainer_${this.buttonPosition}`]
     });
     const _snapButton = _createElement({
       Tag: 'button',
@@ -348,6 +405,8 @@ class Snipping {
     _snapButtonContainer.appendChild(_snapButton);
     document.body.appendChild(_snapButtonContainer);
   }
+
+  // ...
 
   //! TODO
   init(cb: Function) {

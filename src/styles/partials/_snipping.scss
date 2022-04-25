@@ -1,3 +1,11 @@
+.snippingFeedBackContainerOverlay {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 88;
+}
 .snippingFeedBackContainer {
   position: fixed;
   z-index: 999;
@@ -8,12 +16,32 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  .__headerActionBtns {
+    display: flex;
+    button {
+      width: fit-content;
+      &:hover {
+        background-color: $white;
+        border-radius: 4px;
+        transition: 0.3s;
+        svg,
+        path {
+          fill: $primary;
+        }
+      }
+    }
+  }
   .__annotateTools {
-    background-color: $white;
+    background-color: transparent;
     border-radius: 5px;
     display: flex;
+    justify-content: space-between;
+    width: 200px;
+    height: 40px;
+    padding: 4px;
   }
   button {
+    width: 100%;
     padding: 5px;
     border: 0;
     margin: 0 4px 0 0;
@@ -24,28 +52,36 @@
     align-items: center;
   }
   .__snipping_button_active {
-    background-color: $activeBtn;
-    color: $white;
+    background-color: $white;
+    color: $primary;
+    transition: 0.3s;
+    border-radius: 4px;
 
     svg,
     path {
-      fill: $white;
+      fill: $primary;
     }
   }
   .snippingContainer {
-    height: 85%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     background: #f2f2f2;
-    border-radius: 7px;
-    padding: 10px;
+    border: 4px solid $primary;
+    position: relative;
 
     .snippingHeader {
       display: flex;
       justify-content: space-between;
+      position: absolute;
+      z-index: 99;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: $primary;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
     }
-    .snippingContent {
-      margin: 10px 0 0 0;
-    }
+
     #snippingCanvas {
       display: block;
       width: 100%;
@@ -59,6 +95,9 @@
       padding: 10px;
     }
   }
+}
+.__snippingInfoHidden {
+  display: none;
 }
 ._snippingInfo {
   background: #f2f2f2;
@@ -94,6 +133,10 @@
     }
     ._feedbackInfoTextarea {
       height: 140px;
+    }
+
+    ._feedbackSubmitBtnHidden {
+      display: none;
     }
     ._feedbackSubmitBtn {
       background-color: $primary;

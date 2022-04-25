@@ -5,7 +5,9 @@ export namespace ICanvasMode {
     button?: boolean; // enables floating button
     buttonLabel?: string; // text for floating button
     initialMarkMode?: IMarkMode; // mark or censored
-    appId: appId;
+    appId: appId; // app id
+    enableForm?: boolean; // enables form
+    buttonPosition?: 'left' | 'bottom'; // position of form
   }
 }
 
