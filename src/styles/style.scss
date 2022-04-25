@@ -40,6 +40,12 @@
 #screenshot {
   height: 100%;
   width: 100%;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .rectangle {
   border: 3px solid rgb(255, 255, 0);
@@ -69,30 +75,63 @@
   border-radius: 4px;
   position: absolute;
   background-color: transparent;
-  border: 2px dashed;
-  p {
+  border: 2px dashed transparent;
+  pointer-events: none;
+  width: 200px;
+  .__annotateTextToolInput {
     color: red;
-    font-weight: 700;
+    font-weight: lighter;
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
     outline: none;
+    pointer-events: all;
+    background-color: $white;
+    padding: 4px;
+    border-radius: 3px;
+    position: relative;
+    z-index: 9;
+    margin: 15px 0 0 0;
+
+    &::before {
+      content: ' ';
+      background-color: #fff;
+      position: absolute;
+      top: -5px;
+      height: 20px;
+      width: 20px;
+      transform: rotate(40deg);
+      z-index: -1;
+    }
   }
   button {
     pointer-events: auto;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     border-radius: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.2);
+    background: $primary;
+    padding: 13px;
     color: $white;
+    border: 3px solid $white;
+    font-weight: 700;
+    ._textAnnotateDelete {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
     &:hover {
-      background: $containerColor;
-      color: $black;
+      ._textAnnotateCount {
+        display: none;
+      }
+      ._textAnnotateDelete {
+        display: flex;
+      }
     }
   }
   &:hover {
-    border: 2px solid red;
+    border: 2px solid transparent;
   }
 }
 
@@ -123,19 +162,37 @@
 }
 
 .snipping__captureScreenshotContainer {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  z-index: 999;
-  .snipping__captureScreenshotBtn {
-    padding: 7px;
-    border: 0;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    cursor: pointer;
-    transform: rotateZ(-90deg) translateX(50%) translateY(3px);
-    transform-origin: 100% 100%;
-    background-color: $primary;
-    color: $white;
+  &_left {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 999;
+    .snipping__captureScreenshotBtn {
+      padding: 7px;
+      border: 0;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      cursor: pointer;
+      transform: rotateZ(-90deg) translateX(50%) translateY(3px);
+      transform-origin: 100% 100%;
+      background-color: $primary;
+      color: $white;
+    }
+  }
+  &_bottom {
+    position: fixed;
+    bottom: 0;
+    left: 10%;
+    z-index: 999;
+    .snipping__captureScreenshotBtn {
+      padding: 7px;
+      border: 0;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      cursor: pointer;
+      transform-origin: 100% 100%;
+      background-color: $primary;
+      color: $white;
+    }
   }
 }
