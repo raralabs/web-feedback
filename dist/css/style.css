@@ -38,12 +38,14 @@
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
-  width: 200px;
-  height: 40px;
+  width: fit-content;
+  height: 50px;
   padding: 4px;
+  gap: 0.7em;
 }
 .snippingFeedBackContainer button {
-  width: 100%;
+  width: 40px;
+  height: 40px;
   padding: 5px;
   border: 0;
   margin: 0 4px 0 0;
@@ -52,6 +54,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 2px solid transparent;
+}
+.snippingFeedBackContainer button .__undoElCounts {
+  margin: 10px 0 0 0;
+}
+.snippingFeedBackContainer .__snipping_button_default_active {
+  border: 2px solid #fff;
+  transition: 0.3s;
+  border-radius: 4px;
+}
+.snippingFeedBackContainer .__snipping_button_default_active svg,
+.snippingFeedBackContainer .__snipping_button_default_active path {
+  fill: #fff;
 }
 .snippingFeedBackContainer .__snipping_button_active {
   background-color: #fff;
@@ -241,7 +256,7 @@
   margin: 15px 0 0 0;
 }
 .__annotateTextTool .__annotateTextToolInput::before {
-  content: ' ';
+  content: " ";
   background-color: #fff;
   position: absolute;
   top: -5px;
