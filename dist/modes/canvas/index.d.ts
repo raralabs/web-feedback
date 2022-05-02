@@ -4,7 +4,7 @@ import { ICanvasMode } from '../../types/IModes/ICanvas';
 declare class Snipping {
     buttonLabel: string;
     markMode: ICanvasMode.IMarkMode;
-    annotateLists: any[];
+    annotateLists: HTMLElement[];
     snippingHeaderHTML: string;
     appId: string | number;
     enableForm: boolean;
@@ -12,7 +12,7 @@ declare class Snipping {
     textAnnotateCount: number;
     constructor(config: ICanvasMode.IConfig);
     _clearMarkers(markerName: string): void;
-    _delMarker(e: any): string;
+    _delMarker(e: MouseEvent, annotateLists: HTMLElement[]): string;
     _initDraw(canvas: HTMLDivElement): void;
     _takeScreenShot: () => void;
     _done(cb: Function): void;
