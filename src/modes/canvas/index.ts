@@ -229,6 +229,7 @@ class Snipping {
       width: window.innerWidth,
       height: window.innerHeight
     }).then(function (canvas) {
+      getElement('._snapLoader')[0].style.display = 'none';
       getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
@@ -315,6 +316,8 @@ class Snipping {
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
     });
   }
+
+  // ..
 
   _prepareDom() {
     /** main container */
@@ -415,6 +418,14 @@ class Snipping {
       Tag: 'div',
       classList: [`snipping__captureScreenshotContainer_${this.buttonPosition}`]
     });
+    const _loader = _createElement({
+      Tag: 'div',
+      classList: ['_snapLoader'],
+      innerHTML: getIcon('loader')
+    });
+    style(_loader, {
+      display: 'none'
+    });
     const _snapButton = _createElement({
       Tag: 'button',
       innerHTML: this.buttonLabel,
@@ -422,14 +433,14 @@ class Snipping {
     });
 
     _snapButton.addEventListener('click', () => {
-      _snapButtonContainer.style.display = 'none';
+      _snapButton.style.display = 'none';
+      _loader.style.display = 'block';
       this._takeScreenShot();
     });
     _snapButtonContainer.appendChild(_snapButton);
+    _snapButtonContainer.appendChild(_loader);
     document.body.appendChild(_snapButtonContainer);
   }
-
-  // ...
 
   //! TODO
   init(cb: Function) {
