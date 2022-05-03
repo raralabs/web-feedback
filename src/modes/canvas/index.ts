@@ -288,7 +288,7 @@ class Snipping {
       this._clearMarkers('rectangle');
       this._clearMarkers('censored');
       getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-      getElement(`.snipping__captureScreenshotContainer_${this.buttonPosition}`)[0].style.display = 'block';
+      getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
     });
 
     doneBtn.addEventListener('click', (event: MouseEvent) => {
