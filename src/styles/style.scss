@@ -2,13 +2,14 @@
 @import './partials/variables';
 @import './partials/snipping';
 @import './partials/page';
+@import './partials/loader';
 .feedbackContainer {
   position: absolute;
 
   .feedback {
     width: 300px;
     height: 400px;
-    background: #ddd;
+    background: $containerColor;
     z-index: 999999999;
     border-radius: 3px;
     position: fixed;
@@ -22,7 +23,7 @@
   .deleteBtn {
     width: 20px;
     height: 20px;
-    background: #aaa;
+    background: $gray;
     font-size: 1.2vw;
     display: none;
     justify-content: center;
@@ -48,8 +49,8 @@
   -ms-user-select: none;
 }
 .rectangle {
-  border: 3px solid rgb(255, 255, 0);
-  border-radius: 4px;
+  border: 5px solid $primary;
+  border-radius: 9px;
   position: absolute;
   pointer-events: none;
   button {
@@ -68,7 +69,7 @@
     }
   }
   &:hover {
-    border: 3px solid red;
+    border: 3px solid $red;
   }
 }
 .__annotateTextTool {
@@ -79,9 +80,9 @@
   pointer-events: none;
   width: 200px;
   .__annotateTextToolInput {
-    color: red;
+    color: $red;
     font-weight: lighter;
-    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    text-shadow: -1px -1px 0 $white, 1px -1px 0 $white, -1px 1px 0 $white, 1px 1px 0 $white;
     outline: none;
     pointer-events: all;
     background-color: $white;
@@ -93,7 +94,7 @@
 
     &::before {
       content: ' ';
-      background-color: #fff;
+      background-color: $white;
       position: absolute;
       top: -5px;
       height: 20px;
@@ -138,7 +139,7 @@
 .censored {
   border-radius: 4px;
   position: absolute;
-  background-color: #000;
+  background-color: $black;
   pointer-events: none;
   button {
     pointer-events: auto;

@@ -9,7 +9,7 @@ import { getIcon } from '../../res';
 class Snipping {
   buttonLabel: string;
   markMode: ICanvasMode.IMarkMode;
-  annotateLists: any[];
+  annotateLists: HTMLElement[];
   snippingHeaderHTML: string;
   appId: string | number;
   enableForm: boolean;
@@ -67,8 +67,17 @@ class Snipping {
     }
   }
 
-  _delMarker(e: any) {
-    return (e.srcElement.parentElement.style.display = 'none');
+  _delMarker(e: MouseEvent, annotateLists: HTMLElement[]) {
+    if (annotateLists.length > 0) {
+      const currentAnnotateIndex = annotateLists.findIndex((annotate) => annotate === (e as any).srcElement.parentElement);
+      if (currentAnnotateIndex !== -1) {
+        annotateLists[currentAnnotateIndex].style.display = 'none';
+        annotateLists.splice(currentAnnotateIndex, 1);
+        this.annotateLists = annotateLists;
+        getElement('.__undoElCounts')[0].innerHTML = annotateLists.length.toString();
+      }
+    }
+    return ((e as any).srcElement.parentElement.style.display = 'none');
   }
 
   _initDraw(canvas: HTMLDivElement) {
@@ -146,7 +155,9 @@ class Snipping {
             name: 'delMarker',
             classlist: ['__snipping_marker_delete']
           });
-          (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
+          (_delBtn as HTMLButtonElement).addEventListener('click', (e) => {
+            that._delMarker(e, that.annotateLists);
+          });
           _marker = _createElement({
             Tag: 'div'
           });
@@ -156,7 +167,7 @@ class Snipping {
           (_marker as HTMLDivElement).style.left = mouse.x + 'px';
           (_marker as HTMLDivElement).style.top = mouse.y + 'px';
           canvas.appendChild(_marker as Node);
-          that.annotateLists.push(_marker);
+          that.annotateLists.push(_marker as HTMLDivElement);
           getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
         } else {
           mouse.startX = mouse.x;
@@ -175,7 +186,9 @@ class Snipping {
             name: 'delMarker',
             classlist: ['__snipping_marker_delete __snipping_marker_textAnnotateCount']
           });
-          (_delBtn as HTMLButtonElement).addEventListener('click', that._delMarker);
+          (_delBtn as HTMLButtonElement).addEventListener('click', (e) => {
+            that._delMarker(e, that.annotateLists);
+          });
           _textAnnotateEl = _createElement({
             Tag: 'div',
             classList: ['__annotateTextTool']
@@ -193,7 +206,7 @@ class Snipping {
           (_textAnnotateEl as HTMLDivElement).style.left = mouse.initialX + 'px';
           (_textAnnotateEl as HTMLDivElement).style.top = mouse.initialY + 'px';
           canvas.appendChild(_textAnnotateEl as Node);
-          that.annotateLists.push(_textAnnotateEl);
+          that.annotateLists.push(_textAnnotateEl as HTMLDivElement);
           getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
           canvas.style.cursor = 'default';
           that.textAnnotateCount += 1;
@@ -216,6 +229,7 @@ class Snipping {
       width: window.innerWidth,
       height: window.innerHeight
     }).then(function (canvas) {
+      getElement('._snapLoader')[0].style.display = 'none';
       getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
@@ -284,7 +298,7 @@ class Snipping {
     __undoBtn.addEventListener('click', () => {
       if (this.annotateLists.length > 0) {
         const currentAnnotateLists = this.annotateLists;
-        const lastAnnotateList = currentAnnotateLists.pop();
+        const lastAnnotateList = currentAnnotateLists.pop() as HTMLElement;
         lastAnnotateList.style.display = 'none';
         getElement('.__undoElCounts')[0].innerHTML = this.annotateLists.length.toString();
       }
@@ -302,6 +316,8 @@ class Snipping {
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
     });
   }
+
+  // ..
 
   _prepareDom() {
     /** main container */
@@ -402,6 +418,14 @@ class Snipping {
       Tag: 'div',
       classList: [`snipping__captureScreenshotContainer_${this.buttonPosition}`]
     });
+    const _loader = _createElement({
+      Tag: 'div',
+      classList: ['_snapLoader'],
+      innerHTML: getIcon('loader')
+    });
+    style(_loader, {
+      display: 'none'
+    });
     const _snapButton = _createElement({
       Tag: 'button',
       innerHTML: this.buttonLabel,
@@ -409,14 +433,14 @@ class Snipping {
     });
 
     _snapButton.addEventListener('click', () => {
-      _snapButtonContainer.style.display = 'none';
+      _snapButton.style.display = 'none';
+      _loader.style.display = 'block';
       this._takeScreenShot();
     });
     _snapButtonContainer.appendChild(_snapButton);
+    _snapButtonContainer.appendChild(_loader);
     document.body.appendChild(_snapButtonContainer);
   }
-
-  // ...
 
   //! TODO
   init(cb: Function) {
