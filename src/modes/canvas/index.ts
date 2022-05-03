@@ -195,7 +195,6 @@ class Snipping {
           });
           __editableTextAnnotate = _createElement({
             Tag: 'p',
-            innerHTML: 'Your text',
             classList: ['__annotateTextToolInput']
           });
 
@@ -210,6 +209,7 @@ class Snipping {
           getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
           canvas.style.cursor = 'default';
           that.textAnnotateCount += 1;
+          __editableTextAnnotate?.focus();
           return 0;
         }
       }
