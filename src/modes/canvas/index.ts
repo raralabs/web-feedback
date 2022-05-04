@@ -17,8 +17,8 @@ class Snipping {
   textAnnotateCount: number;
   fileName: string;
 
-  constructor(config: ICanvasMode.IConfig) {
-    const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config;
+  constructor(config?: ICanvasMode.IConfig) {
+    const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config || {};
     this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
     this.buttonPosition = buttonPosition || 'bottom';
