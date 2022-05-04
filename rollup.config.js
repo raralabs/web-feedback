@@ -1,12 +1,10 @@
-//uses peer dependency
+// uses peer dependency
 import external from 'rollup-plugin-peer-deps-external';
-//pairs rollup with typescript
+// pairs rollup with typescript
 import typescript from 'rollup-plugin-typescript2';
 // resolves third party modules and add in the source
 import resolve from '@rollup/plugin-node-resolve';
 import scss from 'rollup-plugin-scss';
-//uglifying and minizing the budle
-// import { terser } from "rollup-plugin-terser";
 // babel
 import babel from 'rollup-plugin-babel';
 
@@ -36,7 +34,6 @@ export default [
         failOnError: true,
         runtime: require('sass')
       })
-      // terser(),
     ]
   }
 ];
