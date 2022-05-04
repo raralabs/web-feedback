@@ -225,9 +225,13 @@ class Snipping {
       x: window.scrollX,
       y: window.scrollY,
       width: window.innerWidth,
-      height: window.innerHeight
+      height: window.innerHeight,
+      ignoreElements: (element): any => {
+        if (element.classList.contains('_snapLoader')) {
+          return true;
+        }
+      }
     }).then(function (canvas) {
-      getElement('._snapLoader')[0].style.display = 'none';
       getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
@@ -351,39 +355,8 @@ class Snipping {
       classList: ['snippingHeader'],
       innerHTML: this.snippingHeaderHTML
     });
-    // .
-
-    /** snipping info area */
-    const _snippingInfo = _createElement({
-      Tag: 'div',
-      classList: [`${this.enableForm ? '_snippingInfo' : '__snippingInfoHidden'}`],
-      innerHTML: `<div>
-            <header>
-            <h1>Rara Feedback Portal</h1>
-            </header>
-            <form>
-            <label>
-             <p>Title</p>
-             <input class="_feedbackInfoInput" input type="text" placeholder="Describe your feedback"/>
-            </label>
-            <label>
-            <p>Description</p>
-            <textarea class="_feedbackInfoTextarea" textarea class="__feedback_description" placeholder="Your Feedback here!"/>What's your issue?
-
-            What did you expect?
-            
-            
-            ---
-            💡 Note
-            Give as much info as you want to help our devs fix the issue.</textarea>
-            </label>
-            <button type="button" class="_feedbackSubmitBtn">Submit</button>
-            </form>
-            </div>`
-    });
 
     /** snipping content */
-
     const _snippingContent = _createElement({
       Tag: 'div',
       classList: ['snippingContent'],
@@ -404,7 +377,6 @@ class Snipping {
     _snippingContent.appendChild(_snapedImg);
     _snippingContainer.appendChild(_snippingContent);
     _container.appendChild(_snippingContainer);
-    _container.appendChild(_snippingInfo);
     document.body.appendChild(_container);
     document.body.appendChild(_containerOverlay);
   }
