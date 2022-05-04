@@ -4,8 +4,8 @@
 
 #clone project
 
-git clone https://github.com/raralabs/feedback-system.git
-cd feedback-system
+git clone https://github.com/raralabs/web-feedback.git
+cd web-feedback
 
 #install dependencies
 
