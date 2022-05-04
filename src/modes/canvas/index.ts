@@ -3,7 +3,7 @@ import { ICanvasMode } from '../../types/IModes/ICanvas';
 
 /** utils & resources */
 import { getIcon } from '../../res';
-import { getElement, style, _createElement } from '../../utils';
+import { dataURLtoFile, getElement, style, _createElement } from '../../utils';
 
 /** stylesheet */
 import '../../styles/style.scss';
@@ -13,17 +13,13 @@ class Snipping {
   markMode: ICanvasMode.IMarkMode;
   annotateLists: HTMLElement[];
   snippingHeaderHTML: string;
-  appId: string | number;
-  enableForm: boolean;
   buttonPosition: 'left' | 'bottom';
   textAnnotateCount: number;
 
   constructor(config: ICanvasMode.IConfig) {
-    const { buttonLabel, initialMarkMode, appId, enableForm, buttonPosition } = config;
+    const { buttonLabel, initialMarkMode, buttonPosition } = config;
     this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
-    this.enableForm = enableForm || false;
-    this.appId = appId;
     this.buttonPosition = buttonPosition || 'bottom';
     this.annotateLists = [];
 
@@ -49,10 +45,13 @@ class Snipping {
         ${getIcon('censorAnnotate')}
         </button>
 
-        <button title="toggle text annotate mmode" class="__textBtn">
+        <button title="toggle text annotate mode" class="__textBtn">
         ${getIcon('textAnnotate')}
         </button>
-        <button title="submit screenshot" class="${this.enableForm ? '_feedbackSubmitBtnHidden __snipping_button_default_active' : '_feedbackSubmitBtn __snipping_button_default_active'}">
+        <button title="Download as image" class="__downloadAsImage">
+        ${getIcon('download')}
+        </button>
+        <button title="submit screenshot" class="_feedbackSubmitBtn __snipping_button_default_active">
         ${getIcon('right')}
         </button>
         </div>`;
@@ -250,23 +249,37 @@ class Snipping {
     const that = this;
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
-    const feedbackTitle = getElement('._feedbackInfoInput')[0];
-    const feedbackDescription = getElement('._feedbackInfoTextarea')[0];
-
     html2canvas(snippingContent as HTMLElement, {
       useCORS: true
     }).then((canvas) => {
-      const image = canvas.toDataURL('image/png');
-      const data = {
-        // image,
-        appId: that.appId,
-        title: feedbackTitle.value,
-        description: feedbackDescription.value
-      };
+      const image = canvas.toDataURL();
+      dataURLtoFile(image, 'feedbackImage.png').then((responese) => {
+        const data = {
+          base64Image: image,
+          image: responese
+        };
+        cb(data);
+      });
       (document.getElementById('screenshot') as HTMLImageElement).src = image;
       that._clearMarkers('rectangle');
       that._clearMarkers('censored');
-      cb(data);
+    });
+  }
+
+  _download() {
+    const snippingContent = document.getElementsByClassName('snippingContent')[0];
+    html2canvas(snippingContent as HTMLElement, {
+      useCORS: true
+    }).then((canvas) => {
+      const image = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
+      const __imageDownloader = _createElement({
+        Tag: 'a',
+        href: image,
+        download: 'feedbackImage.jpg'
+      });
+      document.body.appendChild(__imageDownloader);
+      __imageDownloader.click();
+      document.body.removeChild(__imageDownloader);
     });
   }
 
@@ -287,6 +300,7 @@ class Snipping {
     const __markBtn = getElement('.__markBtn')[0];
     const __cencorBtn = getElement('.__cencorBtn')[0];
     const __textBtn = getElement('.__textBtn')[0];
+    const __downloadAsImage = getElement('.__downloadAsImage')[0];
 
     retakeScreenshotBtn.addEventListener('click', () => {
       this._clearMarkers('rectangle');
@@ -318,6 +332,9 @@ class Snipping {
     __textBtn.addEventListener('click', () => {
       this.markMode = 'text';
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
+    });
+    __downloadAsImage.addEventListener('click', () => {
+      this._download();
     });
   }
 
