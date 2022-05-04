@@ -1,5 +1,5 @@
 {
-  "name": "feedback",
+  "name": "web-feedback",
   "version": "1.0.0",
   "description": "",
   "main": "dist/cjs/index.js",
@@ -42,16 +42,21 @@
     "sass": "^1.49.9"
   },
   "keywords": [
-    "react-feedback",
+    "feedback-system",
     "npm-package",
-    "feedback"
+    "web-feedback",
+    "web-feedback-system",
+    "web-feedback-system-npm-package",
+    "screenshot-web",
+    "screenshot-web-feedback",
+    "screenshot-web-feedback-system"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/raralabs/feedback.git"
+    "url": "https://github.com/raralabs/web-feedback"
   },
   "bugs": {
-    "url": "https://github.com/raralabs/feedback/issues"
+    "url": "https://github.com/raralabs/web-feedback/issues"
   },
-  "homepage": "https://github.com/raralabs/feedback"
+  "homepage": "https://github.com/raralabs/web-feedback"
 }

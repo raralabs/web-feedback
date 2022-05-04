@@ -4,13 +4,8 @@
 
 #clone project
 
-git clone https://github.com/raralabs/feedback.git
-
-
-
-cd feedback
-
-
+git clone https://github.com/raralabs/web-feedback.git
+cd web-feedback
 
 #install dependencies
 
@@ -32,7 +27,7 @@ yarn run build-lib
   - Censor
   - Text Annotate
 
-- Undo/Redo Annotates
+- Undo Annotates
 
 ### Usages
 
@@ -41,18 +36,37 @@ yarn run build-lib
 import { Snipping } from '$libDir/lib/dist';
 
 let anything = new Snipping({
-  buttonLabel: 'Feedback',
-  initialMarkMode: 'mark'
+  buttonLabel: 'Send Feedback',
+  initialMarkMode: 'mark',
+  fileName: 'feedbackScreenshot'
+  /** other configs **/
 });
 
 /*
  * initialize on app start
  * it also return callback with submit data
  */
-anything.init((data) => {});
+anything.init((data) => {
+  const { image, base64Image } = data;
+  /**
+   * image : image as file type
+   * base64Image: image as base64
+   *
+   * /
+});
 
 /*
  * or you can initialize using calling anything.init() func on any events.
  *eg: onClick:()=> anything.init()
  */
+
+/**
+ * All config
+ *
+ *  button?: boolean; // enables floating button
+    buttonLabel?: string; // text for floating button
+    initialMarkMode?: IMarkMode; // mark or censored
+    buttonPosition?: 'left' | 'bottom'; // position of form
+    fileName?: string; // name of file
+*/
 ```
