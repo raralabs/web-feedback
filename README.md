@@ -73,4 +73,4 @@ anything.init((data) => {
 
 # Contributing
 
-Want to contribute? Please check the guidelines Contributing.md
+Want to contribute? Please check the guidelines [Contributing.md](https://github.com/raralabs/web-feedback/tree/features/snipping)
