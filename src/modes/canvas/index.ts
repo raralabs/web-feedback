@@ -1,10 +1,12 @@
-import { getElement, style, _createElement } from '../../utils';
 import html2canvas from 'html2canvas';
+import { ICanvasMode } from '../../types/IModes/ICanvas';
+
+/** utils & resources */
+import { getIcon } from '../../res';
+import { getElement, style, _createElement } from '../../utils';
 
 /** stylesheet */
 import '../../styles/style.scss';
-import { ICanvasMode } from '../../types/IModes/ICanvas';
-import { getIcon } from '../../res';
 
 class Snipping {
   buttonLabel: string;
@@ -88,7 +90,7 @@ class Snipping {
       initialX: 0,
       initialY: 0
     };
-    function setMousePosition(e: MouseEvent) {
+    const setMousePosition = (e: MouseEvent) => {
       const ev: any = e || window.event; // Moz || IE
       if (ev.pageX) {
         // Moz
@@ -99,9 +101,9 @@ class Snipping {
         mouse.x = ev.layerX;
         mouse.y = ev.layerY;
       }
-    }
+    };
 
-    function setInitialPosition(e: MouseEvent) {
+    const setInitialPosition = (e: MouseEvent) => {
       const ev: any = e || window.event; // Moz || IE
       if (ev.pageX) {
         // Moz
@@ -112,14 +114,14 @@ class Snipping {
         mouse.initialX = ev.layerX;
         mouse.initialY = ev.layerY;
       }
-    }
+    };
 
     let _marker: HTMLDivElement | null = null;
     let _textAnnotateEl: HTMLDivElement | null = null;
     let _delBtn: HTMLButtonElement | null = null;
     let __editableTextAnnotate: HTMLButtonElement | null = null;
 
-    canvas.onmousemove = function (e) {
+    canvas.onmousemove = (e) => {
       setMousePosition(e);
       if (_marker !== null) {
         style(_marker, {
@@ -131,7 +133,7 @@ class Snipping {
       }
     };
 
-    canvas.onclick = function (e: MouseEvent) {
+    canvas.onclick = (e: MouseEvent) => {
       setInitialPosition(e);
       if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
       if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
@@ -231,7 +233,7 @@ class Snipping {
           return true;
         }
       }
-    }).then(function (canvas) {
+    }).then((canvas) => {
       getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
@@ -253,7 +255,7 @@ class Snipping {
 
     html2canvas(snippingContent as HTMLElement, {
       useCORS: true
-    }).then(function (canvas) {
+    }).then((canvas) => {
       const image = canvas.toDataURL('image/png');
       const data = {
         // image,
@@ -410,12 +412,10 @@ class Snipping {
     document.body.appendChild(_snapButtonContainer);
   }
 
-  //! TODO
   init(cb: Function) {
     if (typeof document !== 'undefined' && typeof window !== 'undefined') {
       this._prepareSnapper();
       this._prepareDom();
-      // ! TODO
       this._initEvents(cb);
     }
   }
