@@ -58,8 +58,6 @@ class Snipping {
     this.textAnnotateCount = 1;
   }
 
-  // .....
-
   _clearMarkers(markerName: string) {
     const markers: any = document.getElementsByClassName(markerName);
     while (markers[0]) {
@@ -316,8 +314,6 @@ class Snipping {
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
     });
   }
-
-  // ..
 
   _prepareDom() {
     /** main container */
