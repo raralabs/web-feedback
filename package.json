@@ -1,11 +1,14 @@
 {
-  "name": "web-feedback",
+  "name": "@raralabs/web-feedback",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.esm",
+  "typings": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "package.json",
+    "dist/css/style.css"
   ],
   "scripts": {
     "build-lib": "rollup -c",
