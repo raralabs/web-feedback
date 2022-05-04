@@ -42,4 +42,11 @@ const _createElement = (initObj: any) => {
   return element;
 };
 
-export { createElement, isDocumentReady, getDimensionOfElement, getElement, style, _createElement };
+// image data url to file
+const dataURLtoFile = (dataurl: string, filename: string) => {
+  return fetch(dataurl)
+    .then((res) => res.blob())
+    .then((blob) => new File([blob], filename, { type: 'image/png' }));
+};
+
+export { createElement, isDocumentReady, getDimensionOfElement, getElement, style, _createElement, dataURLtoFile };

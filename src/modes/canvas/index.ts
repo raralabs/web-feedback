@@ -1,28 +1,28 @@
-import { getElement, style, _createElement } from '../../utils';
 import html2canvas from 'html2canvas';
+import { ICallback, ICanvasMode, IFeedbackData } from '../../types/IModes/ICanvas';
+
+/** utils & resources */
+import { getIcon } from '../../res';
+import { dataURLtoFile, getElement, style, _createElement } from '../../utils';
 
 /** stylesheet */
 import '../../styles/style.scss';
-import { ICanvasMode } from '../../types/IModes/ICanvas';
-import { getIcon } from '../../res';
 
 class Snipping {
   buttonLabel: string;
   markMode: ICanvasMode.IMarkMode;
   annotateLists: HTMLElement[];
   snippingHeaderHTML: string;
-  appId: string | number;
-  enableForm: boolean;
   buttonPosition: 'left' | 'bottom';
   textAnnotateCount: number;
+  fileName: string;
 
   constructor(config: ICanvasMode.IConfig) {
-    const { buttonLabel, initialMarkMode, appId, enableForm, buttonPosition } = config;
+    const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config;
     this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
-    this.enableForm = enableForm || false;
-    this.appId = appId;
     this.buttonPosition = buttonPosition || 'bottom';
+    this.fileName = fileName || 'feedbackImage.png';
     this.annotateLists = [];
 
     /** internal configs */
@@ -47,18 +47,19 @@ class Snipping {
         ${getIcon('censorAnnotate')}
         </button>
 
-        <button title="toggle text annotate mmode" class="__textBtn">
+        <button title="toggle text annotate mode" class="__textBtn">
         ${getIcon('textAnnotate')}
         </button>
-        <button title="submit screenshot" class="${this.enableForm ? '_feedbackSubmitBtnHidden __snipping_button_default_active' : '_feedbackSubmitBtn __snipping_button_default_active'}">
+        <button title="Download as image" class="__downloadAsImage">
+        ${getIcon('download')}
+        </button>
+        <button title="submit screenshot" class="_feedbackSubmitBtn __snipping_button_default_active">
         ${getIcon('right')}
         </button>
         </div>`;
 
     this.textAnnotateCount = 1;
   }
-
-  // .....
 
   _clearMarkers(markerName: string) {
     const markers: any = document.getElementsByClassName(markerName);
@@ -90,7 +91,7 @@ class Snipping {
       initialX: 0,
       initialY: 0
     };
-    function setMousePosition(e: MouseEvent) {
+    const setMousePosition = (e: MouseEvent) => {
       const ev: any = e || window.event; // Moz || IE
       if (ev.pageX) {
         // Moz
@@ -101,9 +102,9 @@ class Snipping {
         mouse.x = ev.layerX;
         mouse.y = ev.layerY;
       }
-    }
+    };
 
-    function setInitialPosition(e: MouseEvent) {
+    const setInitialPosition = (e: MouseEvent) => {
       const ev: any = e || window.event; // Moz || IE
       if (ev.pageX) {
         // Moz
@@ -114,14 +115,14 @@ class Snipping {
         mouse.initialX = ev.layerX;
         mouse.initialY = ev.layerY;
       }
-    }
+    };
 
     let _marker: HTMLDivElement | null = null;
     let _textAnnotateEl: HTMLDivElement | null = null;
     let _delBtn: HTMLButtonElement | null = null;
     let __editableTextAnnotate: HTMLButtonElement | null = null;
 
-    canvas.onmousemove = function (e) {
+    canvas.onmousemove = (e) => {
       setMousePosition(e);
       if (_marker !== null) {
         style(_marker, {
@@ -133,7 +134,7 @@ class Snipping {
       }
     };
 
-    canvas.onclick = function (e: MouseEvent) {
+    canvas.onclick = (e: MouseEvent) => {
       setInitialPosition(e);
       if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
       if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
@@ -195,7 +196,6 @@ class Snipping {
           });
           __editableTextAnnotate = _createElement({
             Tag: 'p',
-            innerHTML: 'Your text',
             classList: ['__annotateTextToolInput']
           });
 
@@ -210,6 +210,7 @@ class Snipping {
           getElement('.__undoElCounts')[0].innerHTML = that.annotateLists.length.toString();
           canvas.style.cursor = 'default';
           that.textAnnotateCount += 1;
+          __editableTextAnnotate?.focus();
           return 0;
         }
       }
@@ -227,9 +228,13 @@ class Snipping {
       x: window.scrollX,
       y: window.scrollY,
       width: window.innerWidth,
-      height: window.innerHeight
-    }).then(function (canvas) {
-      getElement('._snapLoader')[0].style.display = 'none';
+      height: window.innerHeight,
+      ignoreElements: (element): any => {
+        if (element.classList.contains('_snapLoader')) {
+          return true;
+        }
+      }
+    }).then((canvas) => {
       getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
       (mainContainer as any).style.display = 'flex';
       canvas.setAttribute('id', 'cnv');
@@ -242,27 +247,42 @@ class Snipping {
     });
   };
 
-  _done(cb: Function) {
+  _done(cb: ICallback) {
     const that = this;
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
-    const feedbackTitle = getElement('._feedbackInfoInput')[0];
-    const feedbackDescription = getElement('._feedbackInfoTextarea')[0];
-
     html2canvas(snippingContent as HTMLElement, {
       useCORS: true
-    }).then(function (canvas) {
-      const image = canvas.toDataURL('image/png');
-      const data = {
-        // image,
-        appId: that.appId,
-        title: feedbackTitle.value,
-        description: feedbackDescription.value
-      };
+    }).then((canvas) => {
+      const image = canvas.toDataURL();
+      dataURLtoFile(image, this.fileName).then((responese) => {
+        const data: IFeedbackData = {
+          base64Image: image,
+          image: responese
+        };
+        cb(data);
+      });
       (document.getElementById('screenshot') as HTMLImageElement).src = image;
       that._clearMarkers('rectangle');
       that._clearMarkers('censored');
-      cb(data);
+    });
+  }
+
+  _download() {
+    const snippingContent = document.getElementsByClassName('snippingContent')[0];
+    html2canvas(snippingContent as HTMLElement, {
+      useCORS: true
+    }).then((canvas) => {
+      const image = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
+      const __imageDownloader = _createElement({
+        Tag: 'a',
+        href: image,
+        download: this.fileName
+      });
+      document.body.appendChild(__imageDownloader);
+      __imageDownloader.click();
+      document.body.removeChild(__imageDownloader);
+      getElement('.__downloadAsImage')[0].disabled = false;
     });
   }
 
@@ -274,7 +294,7 @@ class Snipping {
     });
   };
 
-  _initEvents(cb: Function) {
+  _initEvents(cb: ICallback) {
     const retakeScreenshotBtn = getElement('.__screenshotBtn')[0];
     const doneBtn = getElement('._feedbackSubmitBtn')[0];
 
@@ -283,12 +303,14 @@ class Snipping {
     const __markBtn = getElement('.__markBtn')[0];
     const __cencorBtn = getElement('.__cencorBtn')[0];
     const __textBtn = getElement('.__textBtn')[0];
+    const __downloadAsImage = getElement('.__downloadAsImage')[0];
 
     retakeScreenshotBtn.addEventListener('click', () => {
       this._clearMarkers('rectangle');
       this._clearMarkers('censored');
       getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-      getElement(`.snipping__captureScreenshotContainer_${this.buttonPosition}`)[0].style.display = 'block';
+      getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
+      getElement('._snapLoader')[0].style.display = 'none';
     });
 
     doneBtn.addEventListener('click', (event: MouseEvent) => {
@@ -315,9 +337,11 @@ class Snipping {
       this.markMode = 'text';
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
     });
+    __downloadAsImage.addEventListener('click', () => {
+      __downloadAsImage.disabled = true;
+      this._download();
+    });
   }
-
-  // ..
 
   _prepareDom() {
     /** main container */
@@ -355,39 +379,8 @@ class Snipping {
       classList: ['snippingHeader'],
       innerHTML: this.snippingHeaderHTML
     });
-    // .
-
-    /** snipping info area */
-    const _snippingInfo = _createElement({
-      Tag: 'div',
-      classList: [`${this.enableForm ? '_snippingInfo' : '__snippingInfoHidden'}`],
-      innerHTML: `<div>
-            <header>
-            <h1>Rara Feedback Portal</h1>
-            </header>
-            <form>
-            <label>
-             <p>Title</p>
-             <input class="_feedbackInfoInput" input type="text" placeholder="Describe your feedback"/>
-            </label>
-            <label>
-            <p>Description</p>
-            <textarea class="_feedbackInfoTextarea" textarea class="__feedback_description" placeholder="Your Feedback here!"/>What's your issue?
-
-            What did you expect?
-            
-            
-            ---
-            💡 Note
-            Give as much info as you want to help our devs fix the issue.</textarea>
-            </label>
-            <button type="button" class="_feedbackSubmitBtn">Submit</button>
-            </form>
-            </div>`
-    });
 
     /** snipping content */
-
     const _snippingContent = _createElement({
       Tag: 'div',
       classList: ['snippingContent'],
@@ -408,7 +401,6 @@ class Snipping {
     _snippingContent.appendChild(_snapedImg);
     _snippingContainer.appendChild(_snippingContent);
     _container.appendChild(_snippingContainer);
-    _container.appendChild(_snippingInfo);
     document.body.appendChild(_container);
     document.body.appendChild(_containerOverlay);
   }
@@ -442,12 +434,10 @@ class Snipping {
     document.body.appendChild(_snapButtonContainer);
   }
 
-  //! TODO
-  init(cb: Function) {
+  init(cb: ICallback) {
     if (typeof document !== 'undefined' && typeof window !== 'undefined') {
       this._prepareSnapper();
       this._prepareDom();
-      // ! TODO
       this._initEvents(cb);
     }
   }
