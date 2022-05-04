@@ -1,5 +1,5 @@
 import html2canvas from 'html2canvas';
-import { ICanvasMode } from '../../types/IModes/ICanvas';
+import { ICallback, ICanvasMode, IFeedbackData } from '../../types/IModes/ICanvas';
 
 /** utils & resources */
 import { getIcon } from '../../res';
@@ -15,12 +15,14 @@ class Snipping {
   snippingHeaderHTML: string;
   buttonPosition: 'left' | 'bottom';
   textAnnotateCount: number;
+  fileName: string;
 
   constructor(config: ICanvasMode.IConfig) {
-    const { buttonLabel, initialMarkMode, buttonPosition } = config;
+    const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config;
     this.buttonLabel = buttonLabel || 'Report Bug/Feedback';
     this.markMode = initialMarkMode || 'mark';
     this.buttonPosition = buttonPosition || 'bottom';
+    this.fileName = fileName || 'feedbackImage.png';
     this.annotateLists = [];
 
     /** internal configs */
@@ -245,7 +247,7 @@ class Snipping {
     });
   };
 
-  _done(cb: Function) {
+  _done(cb: ICallback) {
     const that = this;
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
@@ -253,8 +255,8 @@ class Snipping {
       useCORS: true
     }).then((canvas) => {
       const image = canvas.toDataURL();
-      dataURLtoFile(image, 'feedbackImage.png').then((responese) => {
-        const data = {
+      dataURLtoFile(image, this.fileName).then((responese) => {
+        const data: IFeedbackData = {
           base64Image: image,
           image: responese
         };
@@ -275,11 +277,12 @@ class Snipping {
       const __imageDownloader = _createElement({
         Tag: 'a',
         href: image,
-        download: 'feedbackImage.jpg'
+        download: this.fileName
       });
       document.body.appendChild(__imageDownloader);
       __imageDownloader.click();
       document.body.removeChild(__imageDownloader);
+      getElement('.__downloadAsImage')[0].disabled = false;
     });
   }
 
@@ -291,7 +294,7 @@ class Snipping {
     });
   };
 
-  _initEvents(cb: Function) {
+  _initEvents(cb: ICallback) {
     const retakeScreenshotBtn = getElement('.__screenshotBtn')[0];
     const doneBtn = getElement('._feedbackSubmitBtn')[0];
 
@@ -334,6 +337,7 @@ class Snipping {
       this.__changeActiveTool(__textBtn, [__markBtn, __cencorBtn]);
     });
     __downloadAsImage.addEventListener('click', () => {
+      __downloadAsImage.disabled = true;
       this._download();
     });
   }
@@ -429,7 +433,7 @@ class Snipping {
     document.body.appendChild(_snapButtonContainer);
   }
 
-  init(cb: Function) {
+  init(cb: ICallback) {
     if (typeof document !== 'undefined' && typeof window !== 'undefined') {
       this._prepareSnapper();
       this._prepareDom();
