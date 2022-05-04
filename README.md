@@ -56,4 +56,4 @@ Common config you may want to specify include:
 
 # Contributing
 
-Want to contribute? Please check the guidelines [Contributing.md](https://github.com/raralabs/web-feedback/tree/features/snipping). All PRs and issues are welcome.
+Want to contribute? Please check the guidelines [Contributing.md](https://github.com/raralabs/web-feedback/blob/main/CONTRIBUTING.md). All PRs and issues are welcome.
