@@ -34,12 +34,12 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-typescript2": "^0.31.2",
-    "typescript": "^4.5.5"
-  },
-  "dependencies": {
-    "html2canvas": "^1.4.1",
+    "typescript": "^4.5.5",
     "rollup-plugin-scss": "^3.0.0",
     "sass": "^1.49.9"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1"
   },
   "keywords": [
     "feedback-system",
