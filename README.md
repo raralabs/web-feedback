@@ -70,3 +70,7 @@ anything.init((data) => {
     fileName?: string; // name of file
 */
 ```
+
+# Contributing
+
+Want to contribute? Please check the guidelines Contributing.md
