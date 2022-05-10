@@ -5,6 +5,7 @@
 - [Prerequisites](#prerequisites)
 - [Contributing](#Contributing)
   - [Contributing Guide](#Contributing-Guide)
+- [Development Setup](#Development-Setup)
 - [License](#license)
 
 # Prerequisites
