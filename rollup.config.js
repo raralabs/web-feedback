@@ -7,7 +7,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import scss from 'rollup-plugin-scss';
 // babel
 import babel from 'rollup-plugin-babel';
-
+// uglifying and minizing the budle
+import { terser } from 'rollup-plugin-terser';
 export default [
   {
     input: './src/index.ts',
@@ -32,8 +33,10 @@ export default [
       scss({
         output: './dist/css/style.css',
         failOnError: true,
-        runtime: require('sass')
-      })
+        runtime: require('sass'),
+        outputStyle: 'compressed'
+      }),
+      terser()
     ]
   }
 ];
