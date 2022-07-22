@@ -227,6 +227,7 @@ class Snipping {
       useCORS: true,
       x: window.scrollX,
       y: window.scrollY,
+      logging: true,
       width: window.innerWidth,
       height: window.innerHeight,
       ignoreElements: (element): any => {
@@ -240,7 +241,7 @@ class Snipping {
       canvas.setAttribute('id', 'cnv');
       style(canvas, {
         width: '100%',
-        height: '90%'
+        height: '100%'
       });
       (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png');
       func._initDraw(snippingContent);
@@ -261,6 +262,12 @@ class Snipping {
           image: responese
         };
         cb(data);
+        console.log('now can remov');
+        that._clearMarkers('rectangle');
+        that._clearMarkers('censored');
+        getElement('.snippingFeedBackContainer')[0].style.display = 'none';
+        getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
+        getElement('._snapLoader')[0].style.display = 'none';
       });
       (document.getElementById('screenshot') as HTMLImageElement).src = image;
       that._clearMarkers('rectangle');
