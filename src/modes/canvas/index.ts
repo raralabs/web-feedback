@@ -155,6 +155,7 @@ class Snipping {
             Tag: 'button',
             innerHTML: 'X',
             name: 'delMarker',
+            className: 'delMarker',
             classlist: ['__snipping_marker_delete']
           });
           (_delBtn as HTMLButtonElement).addEventListener('click', (e) => {
@@ -250,9 +251,12 @@ class Snipping {
       allowTaint: true,
       x: window.scrollX,
       y: window.scrollY,
-      scale: 2,
+      scale: 1,
       width: window.innerWidth,
       height: window.innerHeight,
+      onclone(document, element) {
+        console.log(document, element);
+      },
       ignoreElements: (element): any => {
         if (element.classList.contains('_snapLoader')) {
           return true;
@@ -276,13 +280,19 @@ class Snipping {
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
     html2canvas(snippingContent as HTMLElement, {
-      useCORS: true
+      useCORS: true,
+      ignoreElements: (element): any => {
+        if (element.classList.contains('delMarker')) {
+          return true;
+        }
+      }
       // allowTaint: true
       // x: window.scrollX,
       // y: window.scrollY,
       // logging: true,
       // width: window.innerWidth,
       // height: window.innerHeight
+
     }).then((canvas) => {
       const image = canvas.toDataURL();
       that._clearMarkers('rectangle');
