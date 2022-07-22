@@ -5,6 +5,7 @@ import { ICallback, ICanvasMode, IFeedbackData } from '../../types/IModes/ICanva
 import { getIcon } from '../../res';
 import { dataURLtoFile, getElement, style, _createElement } from '../../utils';
 
+
 /** stylesheet */
 import '../../styles/style.scss';
 
@@ -217,17 +218,39 @@ class Snipping {
     };
   }
 
+  resetSnap=() => {
+    // reset annotate list
+    this.annotateLists.map((aL) => {
+      aL.style.display = 'none';
+      return 0;
+    });
+    this.annotateLists = [];
+    getElement('.__undoElCounts')[0].innerHTML = this.annotateLists.length.toString();
+
+    // reset text annotate count
+    this.textAnnotateCount = 1;
+
+    // this._clearMarkers();
+
+    console.log('reset snap');
+  }
+
   _takeScreenShot = () => {
+    this.resetSnap();
+    console.log('take screeennshot');
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
     (mainContainer as any).style.display = 'none';
     const snippingContent = getElement('.snippingContent')[0];
     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
+    console.log('try by domtoimage');
+
     html2canvas(document.body, {
       useCORS: true,
+      allowTaint: true,
       x: window.scrollX,
       y: window.scrollY,
-      logging: true,
+      scale: 2,
       width: window.innerWidth,
       height: window.innerHeight,
       ignoreElements: (element): any => {
@@ -243,7 +266,7 @@ class Snipping {
         width: '100%',
         height: '100%'
       });
-      (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png');
+      (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png', 0.8);
       func._initDraw(snippingContent);
     });
   };
@@ -254,8 +277,21 @@ class Snipping {
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
     html2canvas(snippingContent as HTMLElement, {
       useCORS: true
+      // allowTaint: true
+      // x: window.scrollX,
+      // y: window.scrollY,
+      // logging: true,
+      // width: window.innerWidth,
+      // height: window.innerHeight
     }).then((canvas) => {
       const image = canvas.toDataURL();
+      that._clearMarkers('rectangle');
+      that._clearMarkers('censored');
+      getElement('.snippingFeedBackContainer')[0].style.display = 'none';
+      getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
+      getElement('._snapLoader')[0].style.display = 'none';
+
+      that.resetSnap();
       dataURLtoFile(image, this.fileName).then((responese) => {
         const data: IFeedbackData = {
           base64Image: image,
@@ -263,15 +299,10 @@ class Snipping {
         };
         cb(data);
         console.log('now can remov');
-        that._clearMarkers('rectangle');
-        that._clearMarkers('censored');
-        getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-        getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
-        getElement('._snapLoader')[0].style.display = 'none';
       });
       (document.getElementById('screenshot') as HTMLImageElement).src = image;
-      that._clearMarkers('rectangle');
-      that._clearMarkers('censored');
+      // that._clearMarkers('rectangle');
+      // that._clearMarkers('censored');
     });
   }
 
