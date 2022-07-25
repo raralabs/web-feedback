@@ -5,7 +5,7 @@ async function takeScreenshotStream() {
   const width = screen.width * (window.devicePixelRatio || 1);
   const height = screen.height * (window.devicePixelRatio || 1);
 
-  const errors = [];
+  const errors:any[] = [];
   let stream;
   try {
     stream = await navigator.mediaDevices.getDisplayMedia({
@@ -19,6 +19,7 @@ async function takeScreenshotStream() {
     });
   } catch (ex) {
     errors.push(ex);
+    return null;
   }
 
   // for electron js
@@ -40,11 +41,11 @@ async function takeScreenshotStream() {
       });
     } catch (ex) {
       errors.push(ex);
+      return null;
     }
   }
 
   if (errors.length) {
-    console.debug(...errors);
     if (!stream) {
       throw errors[errors.length - 1];
     }
@@ -54,6 +55,9 @@ async function takeScreenshotStream() {
 }
 async function takeScreenshotCanvas() {
   const stream = await takeScreenshotStream();
+  if (!stream) {
+    return null;
+  }
 
   // from: https://stackoverflow.com/a/57665309/5221762
   const video = document.createElement('video');
@@ -74,6 +78,7 @@ async function takeScreenshotCanvas() {
     video.srcObject = stream as MediaProvider;
   });
 
+  console.log('result', result);
   stream?.getTracks().forEach(function (track: any) {
     track.stop();
   });

@@ -234,38 +234,28 @@ class Snipping {
     this.textAnnotateCount = 1;
 
     // this._clearMarkers();
-
-    console.log('reset snap');
   };
 
   _takeScreenShot = async () => {
     this.resetSnap();
-    console.log('take screeennshot');
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
     (mainContainer as any).style.display = 'none';
     const snippingContent = getElement('.snippingContent')[0];
     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
-    console.log('try by domtoimage');
-
-    // const canvas = document.createElement('canvas');
-    // const context = canvas.getContext('2d');
-    // const video = document.createElement('video');
-    // canvas.setAttribute('id', 'cnv');
 
     try {
-      // const captureStream = await navigator.mediaDevices.getDisplayMedia({ audio: false, video: true });
-      // console.log('capture stream ss', captureStream);
-      // video.srcObject = captureStream;
-      // context?.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
       const canv = await takeScreenshotCanvas() as HTMLCanvasElement;
       if (canv) {
         getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
         (mainContainer as any).style.display = 'flex';
         (document.getElementById('screenshot') as HTMLImageElement).src = canv.toDataURL('image/png');
-        console.log('got  image', canv.toDataURL('image/png'));
-        // captureStream.getTracks().forEach((track) => track.stop());
         func._initDraw(snippingContent);
+      } else {
+        getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
+        getElement('.snippingFeedBackContainer')[0].style.display = 'none';
+        getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
+        getElement('._snapLoader')[0].style.display = 'none';
       }
     } catch (err) {
       console.error('Error: ' + err);
@@ -339,7 +329,6 @@ class Snipping {
           image: responese
         };
         cb(data);
-        console.log('now can remov');
       });
       (document.getElementById('screenshot') as HTMLImageElement).src = image;
       // that._clearMarkers('rectangle');
