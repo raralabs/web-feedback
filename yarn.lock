@@ -296,6 +296,11 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@types/dom-to-image@^2.6.4":
+  version "2.6.4"
+  resolved "https://registry.npmjs.org/@types/dom-to-image/-/dom-to-image-2.6.4.tgz"
+  integrity sha512-UddUdGF1qulrSDulkz3K2Ypq527MR6ixlgAzqLbxSiQ0icx0XDlIV+h4+edmjq/1dqn0KgN0xGSe1kI9t+vGuw==
+
 "@types/estree@0.0.39":
   version "0.0.39"
   resolved "https://registry.npmjs.org/@types/estree/-/estree-0.0.39.tgz"
@@ -748,6 +753,16 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
+dom-to-image-more@^2.11.1:
+  version "2.11.1"
+  resolved "https://registry.yarnpkg.com/dom-to-image-more/-/dom-to-image-more-2.11.1.tgz#bd2e87aaa07ac310d147df1f9579547ca14d9179"
+  integrity sha512-Y72mPFhkAPjAbzfUkG/r5SFHt0Kwo39anye0AHwS7yGVysgDIv8i9yo/RD/f9R5FA7wnC5Sus4HJ2r+mL43btg==
+
+dom-to-image@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.npmjs.org/dom-to-image/-/dom-to-image-2.6.0.tgz"
+  integrity sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==
+
 electron-to-chromium@^1.4.84:
   version "1.4.92"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.92.tgz"
@@ -1144,7 +1159,7 @@ fs.realpath@^1.0.0:
 
 fsevents@~2.3.2:
   version "2.3.2"
-  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
 function-bind@^1.1.1:

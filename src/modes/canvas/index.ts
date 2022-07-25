@@ -5,18 +5,19 @@ import { ICallback, ICanvasMode, IFeedbackData } from '../../types/IModes/ICanva
 import { getIcon } from '../../res';
 import { dataURLtoFile, getElement, style, _createElement } from '../../utils';
 
-
 /** stylesheet */
 import '../../styles/style.scss';
+import { takeScreenshotCanvas } from '../../utils/Screenshot';
 
 class Snipping {
   buttonLabel: string;
   markMode: ICanvasMode.IMarkMode;
   annotateLists: HTMLElement[];
   snippingHeaderHTML: string;
-  buttonPosition: 'left' | 'bottom';
+  buttonPosition: 'left' | 'bottom' | 'custom';
   textAnnotateCount: number;
   fileName: string;
+  feedbackBtn: any
 
   constructor(config?: ICanvasMode.IConfig) {
     const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config || {};
@@ -25,6 +26,7 @@ class Snipping {
     this.buttonPosition = buttonPosition || 'bottom';
     this.fileName = fileName || 'feedbackImage.png';
     this.annotateLists = [];
+    // this.feedbackBtn = feedbackBtn;
 
     /** internal configs */
     this.snippingHeaderHTML = `
@@ -219,7 +221,7 @@ class Snipping {
     };
   }
 
-  resetSnap=() => {
+  resetSnap = () => {
     // reset annotate list
     this.annotateLists.map((aL) => {
       aL.style.display = 'none';
@@ -234,9 +236,9 @@ class Snipping {
     // this._clearMarkers();
 
     console.log('reset snap');
-  }
+  };
 
-  _takeScreenShot = () => {
+  _takeScreenShot = async () => {
     this.resetSnap();
     console.log('take screeennshot');
     const func = this;
@@ -246,33 +248,63 @@ class Snipping {
     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
     console.log('try by domtoimage');
 
-    html2canvas(document.body, {
-      useCORS: true,
-      allowTaint: true,
-      x: window.scrollX,
-      y: window.scrollY,
-      scale: 1,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      onclone(document, element) {
-        console.log(document, element);
-      },
-      ignoreElements: (element): any => {
-        if (element.classList.contains('_snapLoader')) {
-          return true;
-        }
+    // const canvas = document.createElement('canvas');
+    // const context = canvas.getContext('2d');
+    // const video = document.createElement('video');
+    // canvas.setAttribute('id', 'cnv');
+
+    try {
+      // const captureStream = await navigator.mediaDevices.getDisplayMedia({ audio: false, video: true });
+      // console.log('capture stream ss', captureStream);
+      // video.srcObject = captureStream;
+      // context?.drawImage(video, 0, 0, window.innerWidth, window.innerHeight);
+      const canv = await takeScreenshotCanvas() as HTMLCanvasElement;
+      if (canv) {
+        getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
+        (mainContainer as any).style.display = 'flex';
+        (document.getElementById('screenshot') as HTMLImageElement).src = canv.toDataURL('image/png');
+        console.log('got  image', canv.toDataURL('image/png'));
+        // captureStream.getTracks().forEach((track) => track.stop());
+        func._initDraw(snippingContent);
       }
-    }).then((canvas) => {
-      getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-      (mainContainer as any).style.display = 'flex';
-      canvas.setAttribute('id', 'cnv');
-      style(canvas, {
-        width: '100%',
-        height: '100%'
-      });
-      (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png', 0.8);
-      func._initDraw(snippingContent);
-    });
+    } catch (err) {
+      console.error('Error: ' + err);
+    }
+
+    // html2canvas(document.body, {
+    //   useCORS: true,
+    //   allowTaint: true,
+    //   x: window.scrollX,
+    //   y: window.scrollY,
+    //   scale: 2,
+    //   width: window.innerWidth,
+    //   height: window.innerHeight,
+    //   onclone(document, element) {
+    //     console.log(document, element);
+    //   },
+    //   ignoreElements: (element): any => {
+    //     if (element.classList.contains('_snapLoader')) {
+    //       return true;
+    //     }
+    //   }
+    // }).then((canvas) => {
+    //   getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
+    //   (mainContainer as any).style.display = 'flex';
+    //   canvas.setAttribute('id', 'cnv');
+    //   var ctx = canvas.getContext('2d');
+    //   if (ctx) {
+    //     ctx.textBaseline = 'ideographic';
+    //     ctx.canvas.style.lineHeight = '4';
+    //     console.log('style', ctx.canvas.style);
+    //   }
+
+    //   style(canvas, {
+    //     width: '100%',
+    //     height: '100%'
+    //   });
+    //   (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png', 0.8);
+    //   func._initDraw(snippingContent);
+    // });
   };
 
   _done(cb: ICallback) {
@@ -292,7 +324,6 @@ class Snipping {
       // logging: true,
       // width: window.innerWidth,
       // height: window.innerHeight
-
     }).then((canvas) => {
       const image = canvas.toDataURL();
       that._clearMarkers('rectangle');
@@ -454,10 +485,12 @@ class Snipping {
   }
 
   _prepareSnapper() {
-    const _snapButtonContainer = _createElement({
-      Tag: 'div',
-      classList: [`snipping__captureScreenshotContainer_${this.buttonPosition}`]
-    });
+    const _snapButtonContainer = this.feedbackBtn
+      ? this.feedbackBtn
+      : _createElement({
+        Tag: 'div',
+        classList: [`snipping__captureScreenshotContainer_${this.buttonPosition}`]
+      });
     const _loader = _createElement({
       Tag: 'div',
       classList: ['_snapLoader'],

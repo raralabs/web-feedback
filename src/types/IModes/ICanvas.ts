@@ -4,8 +4,9 @@ export namespace ICanvasMode {
     button?: boolean; // enables floating button
     buttonLabel?: string; // text for floating button
     initialMarkMode?: IMarkMode; // mark or censored
-    buttonPosition?: 'left' | 'bottom'; // position of form
+    buttonPosition?: 'left' | 'bottom' | 'custom'; // position of form
     fileName?: string; // name of file
+    // feedbackBtn?: any; // custom feedback btn
   }
 }
 

@@ -51,8 +51,33 @@ Common config you may want to specify include:
 - `button` : boolean - enable or disable floating snapper button
 - `buttonLabel`: string - text label for floating snapper button
 - `initialMarkMode`: enum[ 'mark' | 'censored' | 'text' ] - Initial mark mode for the snipper
-- `buttonPostion`: enum[ 'left' | 'right' ] - Position of floating snapper button
+- `buttonPostion`: enum[ 'left' | 'right' | 'custom' ] - Position of floating snapper button
 - `fileName`: string - file name for the screenshot
+
+
+## For Custom buttonPosition
+Use css below
+```css
+.snipping__captureScreenshotContainer_custom {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 999;
+  }
+
+.snipping__captureScreenshotContainer_custom .snipping__captureScreenshotBtn {
+      padding: 7px;
+      border: 0;
+      border-top-right-radius: 5px;
+      border-top-left-radius: 5px;
+      cursor: pointer;
+      transform: rotateZ(-90deg) translateX(50%) translateY(3px);
+      transform-origin: 100% 100%;
+      background-color: $primary;
+      color: white;
+}
+
+```
 
 # Contributing
 
