@@ -137,7 +137,12 @@ class Snipping {
       }
     };
 
-    canvas.onclick = (e: MouseEvent) => {
+    canvas.onmouseup = () => {
+      canvas.style.cursor = 'default';
+      _marker = null;
+    };
+
+    canvas.onmousedown = (e: MouseEvent) => {
       setInitialPosition(e);
       if ((e?.target as HTMLDivElement).className === '__annotateTextTool') return null;
       if ((e?.target as HTMLParagraphElement).className === '__annotateTextToolInput') return null;
