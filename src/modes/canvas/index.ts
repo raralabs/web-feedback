@@ -1,4 +1,3 @@
-import html2canvas from 'html2canvas';
 import { ICallback, ICanvasMode, IFeedbackData } from '../../types/IModes/ICanvas';
 
 /** utils & resources */
@@ -7,7 +6,8 @@ import { dataURLtoFile, getElement, style, _createElement } from '../../utils';
 
 /** stylesheet */
 import '../../styles/style.scss';
-import { takeScreenshotCanvas } from '../../utils/Screenshot';
+// import { takeScreenshotCanvas } from '../../utils/Screenshot';
+import { toPng } from 'html-to-image';
 
 class Snipping {
   buttonLabel: string;
@@ -17,7 +17,7 @@ class Snipping {
   buttonPosition: 'left' | 'bottom' | 'custom';
   textAnnotateCount: number;
   fileName: string;
-  feedbackBtn: any
+  feedbackBtn: any;
 
   constructor(config?: ICanvasMode.IConfig) {
     const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config || {};
@@ -186,7 +186,7 @@ class Snipping {
           _delBtn = _createElement({
             Tag: 'button',
             innerHTML: `
-            <span class="_textAnnotateCount">#${that.textAnnotateCount}</span>
+            <span class="_textAnnotateCount">#</span>
             <span class="_textAnnotateDelete">
             <svg width="20" height="20" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15 0.25C16.4869 0.249946 17.9161 0.825916 18.9875 1.85701C20.0588 2.88811 20.6891 4.29415 20.746 5.78L20.75 6H28C28.3197 6.00103 28.6269 6.12454 28.8583 6.34513C29.0898 6.56571 29.2279 6.86659 29.2443 7.1859C29.2607 7.5052 29.1541 7.81865 28.9465 8.06178C28.7388 8.30491 28.4459 8.45923 28.128 8.493L28 8.5H26.909L25.206 31.07C25.1253 32.1387 24.6438 33.1375 23.8579 33.8663C23.072 34.5951 22.0398 35 20.968 35H9.032C7.96021 35 6.92799 34.5951 6.14211 33.8663C5.35622 33.1375 4.8747 32.1387 4.794 31.07L3.09 8.5H2C1.69054 8.50014 1.39203 8.38549 1.16223 8.17823C0.932437 7.97097 0.787688 7.68583 0.756 7.378L0.75 7.25C0.75 6.603 1.242 6.07 1.872 6.007L2 6H9.25C9.25 4.47501 9.8558 3.01247 10.9341 1.93414C12.0125 0.855802 13.475 0.25 15 0.25V0.25ZM24.402 8.5H5.598L7.288 30.882C7.32127 31.3218 7.51942 31.7329 7.84279 32.0329C8.16616 32.3329 8.5909 32.4997 9.032 32.5H20.968C21.4093 32.5 21.8343 32.3333 22.1578 32.0333C22.4814 31.7332 22.6797 31.322 22.713 30.882L24.403 8.5H24.402ZM18.25 13.75C18.897 13.75 19.43 14.242 19.494 14.872L19.5 15V26C19.5015 26.3214 19.3791 26.6311 19.1583 26.8646C18.9374 27.0982 18.6351 27.2377 18.3141 27.2542C17.9931 27.2706 17.6781 27.1628 17.4345 26.9531C17.1909 26.7434 17.0374 26.4479 17.006 26.128L17 26V15C17 14.31 17.56 13.75 18.25 13.75ZM11.75 13.75C12.397 13.75 12.93 14.242 12.994 14.872L13 15V26C13.0015 26.3214 12.8791 26.6311 12.6583 26.8646C12.4374 27.0982 12.1351 27.2377 11.8141 27.2542C11.4931 27.2706 11.1781 27.1628 10.9345 26.9531C10.6909 26.7434 10.5374 26.4479 10.506 26.128L10.5 26V15C10.5 14.31 11.06 13.75 11.75 13.75ZM15 2.75C14.1699 2.74995 13.3712 3.06755 12.7678 3.63767C12.1644 4.20779 11.802 4.98719 11.755 5.816L11.75 6H18.25C18.25 5.13805 17.9076 4.3114 17.2981 3.7019C16.6886 3.09241 15.862 2.75 15 2.75V2.75Z" fill="white"/>
@@ -209,6 +209,7 @@ class Snipping {
           });
 
           __editableTextAnnotate?.setAttribute('contenteditable', 'true');
+          __editableTextAnnotate?.setAttribute('autofocus', 'true');
 
           (_textAnnotateEl as HTMLDivElement).appendChild(_delBtn as Node);
           (_textAnnotateEl as HTMLDivElement).appendChild(__editableTextAnnotate as Node);
@@ -242,6 +243,10 @@ class Snipping {
   };
 
   _takeScreenShot = async () => {
+    // const filter = (node:any) => {
+    //   const exclusionClasses = ['_snapLoader'];
+    //   return !exclusionClasses.some(classname => node?.classList?.includes(classname));
+    // };
     this.resetSnap();
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
@@ -249,114 +254,89 @@ class Snipping {
     const snippingContent = getElement('.snippingContent')[0];
     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
 
-    try {
-      const canv = await takeScreenshotCanvas() as HTMLCanvasElement;
-      if (canv) {
+    toPng(document.body, {
+      height: window.innerHeight,
+      skipAutoScale: true,
+      filter(domNode) {
+        return !domNode.classList?.contains('_snapLoader');
+      }
+    })
+      .then(function (dataUrl) {
         getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
         (mainContainer as any).style.display = 'flex';
-        (document.getElementById('screenshot') as HTMLImageElement).src = canv.toDataURL('image/png');
+        (document.getElementById('screenshot') as HTMLImageElement).src = dataUrl;
         func._initDraw(snippingContent);
-      } else {
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error);
         getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
         getElement('.snippingFeedBackContainer')[0].style.display = 'none';
         getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
         getElement('._snapLoader')[0].style.display = 'none';
-      }
-    } catch (err) {
-      console.error('Error: ' + err);
-    }
-
-    // html2canvas(document.body, {
-    //   useCORS: true,
-    //   allowTaint: true,
-    //   x: window.scrollX,
-    //   y: window.scrollY,
-    //   scale: 2,
-    //   width: window.innerWidth,
-    //   height: window.innerHeight,
-    //   onclone(document, element) {
-    //     console.log(document, element);
-    //   },
-    //   ignoreElements: (element): any => {
-    //     if (element.classList.contains('_snapLoader')) {
-    //       return true;
-    //     }
-    //   }
-    // }).then((canvas) => {
-    //   getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-    //   (mainContainer as any).style.display = 'flex';
-    //   canvas.setAttribute('id', 'cnv');
-    //   var ctx = canvas.getContext('2d');
-    //   if (ctx) {
-    //     ctx.textBaseline = 'ideographic';
-    //     ctx.canvas.style.lineHeight = '4';
-    //     console.log('style', ctx.canvas.style);
-    //   }
-
-    //   style(canvas, {
-    //     width: '100%',
-    //     height: '100%'
-    //   });
-    //   (document.getElementById('screenshot') as HTMLImageElement).src = canvas.toDataURL('image/png', 0.8);
-    //   func._initDraw(snippingContent);
-    // });
+      });
   };
 
   _done(cb: ICallback) {
     const that = this;
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
-    html2canvas(snippingContent as HTMLElement, {
-      useCORS: true,
-      ignoreElements: (element): any => {
-        if (element.classList.contains('delMarker')) {
-          return true;
-        }
+    const fileName = this.fileName;
+    toPng(snippingContent as HTMLElement, {
+      height: window.innerHeight,
+      skipAutoScale: true,
+      filter(domNode) {
+        return !domNode.classList?.contains('delMarker');
       }
-      // allowTaint: true
-      // x: window.scrollX,
-      // y: window.scrollY,
-      // logging: true,
-      // width: window.innerWidth,
-      // height: window.innerHeight
-    }).then((canvas) => {
-      const image = canvas.toDataURL();
-      that._clearMarkers('rectangle');
-      that._clearMarkers('censored');
-      getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-      getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
-      getElement('._snapLoader')[0].style.display = 'none';
-
-      that.resetSnap();
-      dataURLtoFile(image, this.fileName).then((responese) => {
-        const data: IFeedbackData = {
-          base64Image: image,
-          image: responese
-        };
-        cb(data);
+    })
+      .then(function (dataUrl) {
+        const image = dataUrl;
+        that._clearMarkers('rectangle');
+        that._clearMarkers('censored');
+        getElement('.snippingFeedBackContainer')[0].style.display = 'none';
+        getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
+        getElement('._snapLoader')[0].style.display = 'none';
+        that.resetSnap();
+        dataURLtoFile(image, fileName).then((responese) => {
+          const data: IFeedbackData = {
+            base64Image: image,
+            image: responese
+          };
+          cb(data);
+        });
+        (document.getElementById('screenshot') as HTMLImageElement).src = image;
+      })
+      .catch(function (error) {
+        console.log('error', error);
       });
-      (document.getElementById('screenshot') as HTMLImageElement).src = image;
-      // that._clearMarkers('rectangle');
-      // that._clearMarkers('censored');
-    });
   }
 
   _download() {
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
-    html2canvas(snippingContent as HTMLElement, {
-      useCORS: true
-    }).then((canvas) => {
-      const image = canvas.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
-      const __imageDownloader = _createElement({
-        Tag: 'a',
-        href: image,
-        download: this.fileName
+    const fileName = this.fileName;
+    toPng(snippingContent as HTMLElement, {
+      height: window.innerHeight,
+      skipAutoScale: true,
+      filter(domNode) {
+        return !domNode.classList?.contains('delMarker');
+      }
+    })
+      .then(function (dataUrl) {
+        // const image = dataUrl;
+
+        const image = dataUrl.replace('image/png', 'image/octet-stream');
+        const __imageDownloader = _createElement({
+          Tag: 'a',
+          href: image,
+          download: fileName
+        });
+        document.body.appendChild(__imageDownloader);
+        __imageDownloader.click();
+        document.body.removeChild(__imageDownloader);
+        getElement('.__downloadAsImage')[0].disabled = false;
+      })
+      .catch(function (error) {
+        console.log('error', error);
       });
-      document.body.appendChild(__imageDownloader);
-      __imageDownloader.click();
-      document.body.removeChild(__imageDownloader);
-      getElement('.__downloadAsImage')[0].disabled = false;
-    });
   }
 
   __changeActiveTool = (el: HTMLElement, inActiveEl: Array<HTMLElement>) => {
