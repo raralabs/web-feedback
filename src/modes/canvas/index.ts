@@ -238,7 +238,6 @@ class Snipping {
 
     // reset text annotate count
     this.textAnnotateCount = 1;
-
     // this._clearMarkers();
   };
 
@@ -247,6 +246,7 @@ class Snipping {
     //   const exclusionClasses = ['_snapLoader'];
     //   return !exclusionClasses.some(classname => node?.classList?.includes(classname));
     // };
+    getElement('._snapLoader')[0].style.display = 'block';
     this.resetSnap();
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
@@ -262,6 +262,7 @@ class Snipping {
       }
     })
       .then(function (dataUrl) {
+        getElement('._snapLoader')[0].style.display = 'none';
         getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
         (mainContainer as any).style.display = 'flex';
         (document.getElementById('screenshot') as HTMLImageElement).src = dataUrl;
@@ -294,7 +295,7 @@ class Snipping {
         that._clearMarkers('censored');
         getElement('.snippingFeedBackContainer')[0].style.display = 'none';
         getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
-        getElement('._snapLoader')[0].style.display = 'none';
+        // getElement('._snapLoader')[0].style.display = 'none';
         that.resetSnap();
         dataURLtoFile(image, fileName).then((responese) => {
           const data: IFeedbackData = {
