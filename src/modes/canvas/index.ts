@@ -18,6 +18,7 @@ class Snipping {
   textAnnotateCount: number;
   fileName: string;
   feedbackBtn: any;
+  isSendingSnap: boolean;
 
   constructor(config?: ICanvasMode.IConfig) {
     const { buttonLabel, initialMarkMode, buttonPosition, fileName } = config || {};
@@ -27,6 +28,8 @@ class Snipping {
     this.fileName = fileName || 'feedbackImage.png';
     this.annotateLists = [];
     // this.feedbackBtn = feedbackBtn;
+
+    this.isSendingSnap = false;
 
     /** internal configs */
     this.snippingHeaderHTML = `
@@ -278,10 +281,16 @@ class Snipping {
   };
 
   _done(cb: ICallback) {
+    if (this.isSendingSnap) {
+      console.log('snap already sent');
+      return;
+    }
+    this.isSendingSnap = true;
     const that = this;
     that._clearMarkers('__snipping_marker_delete');
     const snippingContent = document.getElementsByClassName('snippingContent')[0];
     const fileName = this.fileName;
+    getElement('._snapLoader')[0].style.display = 'none';
     toPng(snippingContent as HTMLElement, {
       height: window.innerHeight,
       skipAutoScale: true,
@@ -295,7 +304,6 @@ class Snipping {
         that._clearMarkers('censored');
         getElement('.snippingFeedBackContainer')[0].style.display = 'none';
         getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
-        // getElement('._snapLoader')[0].style.display = 'none';
         that.resetSnap();
         dataURLtoFile(image, fileName).then((responese) => {
           const data: IFeedbackData = {
@@ -303,6 +311,7 @@ class Snipping {
             image: responese
           };
           cb(data);
+          that.isSendingSnap = false;
         });
         (document.getElementById('screenshot') as HTMLImageElement).src = image;
       })
