@@ -78,7 +78,6 @@ async function takeScreenshotCanvas() {
     video.srcObject = stream as MediaProvider;
   });
 
-  console.log('result', result);
   stream?.getTracks().forEach(function (track: any) {
     track.stop();
   });
