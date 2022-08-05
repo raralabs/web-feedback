@@ -248,7 +248,7 @@ class Snipping {
   _takeScreenShot = async () => {
     getElement('._snapLoader')[0].style.display = 'none';
     // document.body.style.height = '10vh';
-
+    console.log('Taking Screenshot v1.0.4');
     this.resetSnap();
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
@@ -518,7 +518,7 @@ class Snipping {
 
     _snapButton.addEventListener('click', () => {
       _snapButton.style.display = 'none';
-      _loader.style.display = 'block';
+      // _loader.style.display = 'block';
       this._takeScreenShot();
     });
     _snapButtonContainer.appendChild(_snapButton);
