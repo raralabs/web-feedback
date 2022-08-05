@@ -247,19 +247,13 @@ class Snipping {
 
   _takeScreenShot = async () => {
     getElement('._snapLoader')[0].style.display = 'none';
-    // document.body.style.height = '10vh';
-    console.log('Taking Screenshot v1.0.4');
+    console.log('Taking Screenshot v2.0.4');
     this.resetSnap();
     const func = this;
     const mainContainer = getElement('.snippingFeedBackContainer')[0];
     (mainContainer as any).style.display = 'none';
     const snippingContent = getElement('.snippingContent')[0];
-    // getElement('._snapLoader')[0].style.display = 'none';
-    // getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-    // (mainContainer as any).style.display = 'flex';
     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'block';
-
-    // func._initDraw(snippingContent);
     try {
       const canv = await takeScreenshotCanvas() as HTMLCanvasElement;
       if (canv) {
@@ -276,35 +270,6 @@ class Snipping {
     } catch (err) {
       console.error('Error: ' + err);
     }
-    // toCanvas(document.body, { canvasHeight: 900 }).then((p) => {
-    //   console.log(p);
-    //   getElement('._snapLoader')[0].style.display = 'none';
-    //   getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-    //   (mainContainer as any).style.display = 'flex';
-    //   (document.getElementById('screenshot') as HTMLImageElement).src = p.toDataURL();
-    //   func._initDraw(snippingContent);
-    // });
-    // toPng(document.body, {
-    //   height: window.innerHeight,
-    //   // skipAutoScale: true,
-    //   filter(domNode) {
-    //     return !domNode.classList?.contains('_snapLoader');
-    //   }
-    // })
-    //   .then(function (dataUrl) {
-    //     getElement('._snapLoader')[0].style.display = 'none';
-    //     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-    //     (mainContainer as any).style.display = 'flex';
-    //     (document.getElementById('screenshot') as HTMLImageElement).src = dataUrl;
-    //     func._initDraw(snippingContent);
-    //   })
-    //   .catch(function (error) {
-    //     console.error('oops, something went wrong!', error);
-    //     getElement('.snippingFeedBackContainerOverlay')[0].style.display = 'none';
-    //     getElement('.snippingFeedBackContainer')[0].style.display = 'none';
-    //     getElement('.snipping__captureScreenshotBtn')[0].style.display = 'block';
-    //     getElement('._snapLoader')[0].style.display = 'none';
-    //   });
   };
 
   _done(cb: ICallback) {
@@ -348,7 +313,6 @@ class Snipping {
   }
 
   _download() {
-    // const snippingContent = document.getElementsByClassName('snippingContent')[0];
     const fileName = this.fileName;
     toPng(document.body, {
       height: window.innerHeight,
@@ -359,7 +323,6 @@ class Snipping {
     })
       .then(function (dataUrl) {
         // const image = dataUrl;
-
         const image = dataUrl.replace('image/png', 'image/octet-stream');
         const __imageDownloader = _createElement({
           Tag: 'a',
